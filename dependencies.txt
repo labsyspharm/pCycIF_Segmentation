@@ -1,0 +1,5 @@
+jai_linux-i586.jar  - Java Advanced Imaging API 1.1.2_01 - http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-java-client-419417.html#jai-1_1_2_01-oth-JPR
+bfmatlab - Bio-Formats 5.3.4 Matlab toolbox - http://downloads.openmicroscopy.org/bio-formats/5.3.4/ 
+python venv - build_o2_venv.sh
+Matlab runtime - need to be sure version matches Matlab version used to generate executable - https://www.mathworks.com/products/compiler/matlab-runtime.html
+mcc -mv CycIF_head.m
