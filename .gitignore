@@ -1,2 +1,9 @@
 #Temp files 
 *~
+
+#MCR files:
+requiredMCRProducts.txt
+readme.txt
+mccExcludedFiles.log
+
+output/
