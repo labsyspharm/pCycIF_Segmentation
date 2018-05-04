@@ -1,4 +1,4 @@
-function [] = bobbySegmentCardiomyo()   
+function [] = runSegmentation(parametersFile)   
 %this function requires input of nuclei stack range. It assumes that every
 %stack beyond that to the end is a cytoplasmic stain. Marker controlled
 %watershed based on distance transform of nuclei channel is employed to
@@ -9,19 +9,29 @@ function [] = bobbySegmentCardiomyo()
 
 % Clarence Yapp 3/5/18
 
-% bobbySegmentCardiomyo_v2('NucMaskChan',[1 4],'Row',['B'],'Col' [2],'SaveFig',false)
 
 javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/bobbySegmentCardioMyo/bfmatlab/bioformats_package.jar')
 
-%Set input variables
-%Eventually read from file
-%Also need proper error catching/messages
-inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB';
-outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output';
-NucMaskChan = [2 5]; %Is this basically number of cycles? 2:cycle num
-row = ['B':'D'];   
-col = [2:5];
-SaveFig = 0;
+
+%Reads file with input parameters, written in Matlab syntax
+fid = fopen(parametersFile);
+inputParams = textscan(fid, '%s', 'Delimiter', '', 'CommentStyle', '%');
+fclose(fid);
+%Evaluates and sets input parameters as Matlab varialbes
+cellfun(@eval, inputParams{1});
+
+%Set NucMaskChan from numCycles = 5;
+NucMaskChan = 2:numCycles;
+
+
+%Set input variables read from file
+%Need to add error catching/messages
+% inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB';
+% outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output';
+% NucMaskChan = [2 5]; %Is this basically number of cycles? 2:cycle num
+% row = ['B':'D'];   
+% col = [2:5];
+% SaveFig = 0;
 
 
 
@@ -160,7 +170,7 @@ for iRow = 1:numel(row)
                 variableCytoNames = cat(2,variableCytoNames,{['CytoplasmChannel' int2str(ivarName)]});
             end
 
-             writetable(array2table([meanIntTable areaTable centroidCellTable],'VariableNames',[variableNucNames variableCytoNames 'NucleusArea' 'CytoplasmArea' 'CellPosition_X' 'CellPosition_Y']),[inputPath filesep '_' name '_cytoMasked.txt'],'Delimiter','\t')
+             writetable(array2table([meanIntTable areaTable centroidCellTable],'VariableNames',[variableNucNames variableCytoNames 'NucleusArea' 'CytoplasmArea' 'CellPosition_X' 'CellPosition_Y']),[outputPath filesep '_' name '_cytoMasked.txt'],'Delimiter','\t')
         end
         %% display
         if SaveFig==1
@@ -184,13 +194,13 @@ for iRow = 1:numel(row)
             linkaxes(axs,'xy')
 
 
-            savefig ([inputPath filesep '_' name '_cytoMasked.fig' ])
+            savefig ([outputPath filesep '_' name '_cytoMasked.fig' ])
             unmaskedImage = I(:,:,2:end);
             allChan=[];
             for i = 1:size(unmaskedImage,3)
                 allChan(:,:,i)  = 65000*(double(allEdge)+normalize((unmaskedImage(:,:,i))));
             end
-            tiffwriteimj(uint16(allChan), [inputPath filesep '_' name '_cytoMasked' ext])
+            tiffwriteimj(uint16(allChan), [outputPath filesep '_' name '_cytoMasked' ext])
             close all
             disp(['Completed ' fileName])
         end

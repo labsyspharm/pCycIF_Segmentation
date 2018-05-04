@@ -1,0 +1,23 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Nececsarry input variables for segmentation
+%   inputPath: absolute path to the location of image stacks to segment. 
+%       Reguired format: string, example: '/path/to/files/'
+%   outputPath: absolute path to the location to save segmented images (if desired) and spreadsheets
+%       Reguired format: string, example: '/path/to/files/'
+%   numCycles: number of cycles in CycIF experiment
+%       Reguired format: double, example: 5
+%   row: rows on a 96-well plate to segment
+%       Reguired format: character array, ['FirstRow' : 'LastRow'] example: ['B':'H']
+%   col: colu,ns on a 96-well plate to segment
+%       Reguired format: double array, [FirstCol : LastCol] example: [2:11]
+%   SaveFig: option to save image stack with new segmentation mask
+%       Requried format: 0 or 1. 1 saves mask, 0 does not. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB';    
+outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output';
+numCycles = 5; %Is this basically number of cycles? 2:cycle num
+row = ['B':'D'];   
+col = [2:5];
+SaveFig = 0;
