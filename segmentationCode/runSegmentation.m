@@ -37,11 +37,10 @@ NucMaskChan = 2:numCycles;
 
 for iRow = 1:numel(row)
     for iCol = 1:numel(col)
-    files = dir([inputPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_*.tif'])
+    files = dir([inputPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_*.tif']);
     numFiles = numel(files);
     
-%     for iFile = 2:2:numFiles
-    for iFile = 1:numFiles
+    for iFile = 3:2:numFiles
         fileName = files(iFile).name;
         [pathstr,name,ext] = fileparts(fileName) ;
         

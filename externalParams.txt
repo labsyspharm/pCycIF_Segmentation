@@ -17,7 +17,7 @@
 
 inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB';    
 outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output';
-numCycles = 5; %Is this basically number of cycles? 2:cycle num
+numCycles = 11; %Is this basically number of cycles? 2:cycle num
 row = ['B':'D'];   
 col = [2:5];
-SaveFig = 0;
+SaveFig = 1;

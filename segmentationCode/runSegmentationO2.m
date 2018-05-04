@@ -41,7 +41,7 @@ for iRow = 1:numel(row)
     numFiles = numel(files);
     
 %     for iFile = 2:2:numFiles
-    for iFile = 1:numFiles
+    for iFile = 3:2:numFiles
         fileName = files(iFile).name;
         [pathstr,name,ext] = fileparts(fileName) ;
         
