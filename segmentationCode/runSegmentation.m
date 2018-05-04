@@ -1,4 +1,4 @@
-function [] = bobbySegmentCardiomyo(varargin)   
+function [] = bobbySegmentCardiomyo()   
 %this function requires input of nuclei stack range. It assumes that every
 %stack beyond that to the end is a cytoplasmic stain. Marker controlled
 %watershed based on distance transform of nuclei channel is employed to
@@ -12,39 +12,22 @@ function [] = bobbySegmentCardiomyo(varargin)
 % bobbySegmentCardiomyo_v2('NucMaskChan',[1 4],'Row',['B'],'Col' [2],'SaveFig',false)
 
 javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/bobbySegmentCardioMyo/bfmatlab/bioformats_package.jar')
-currPath = '.'; % 'Y:\sorger\data\IN Cell Analyzer 6000\Connor\June FDA CycIF Processed\Processed Plates\ProcessedDataP1';
 
-ip = inputParser;
-ip.addParamValue('Path',currPath,@(x)(ischar(x)));      %Better default? Current directory?
-% ip.addParamValue('NucMaskChan',[2 5],@(x)(numel(x) == 2 & all(x > 0 )));  
-% ip.addParamValue('Row',['A' 'H'],@(x)(numel(x) == 2 & ischar(x)));  
-ip.addParamValue('NucMaskChan',[2 5]);  
-ip.addParamValue('Row',['A' 'H'],@(x)(numel(x) <= 2 & ischar(x)));  
-% ip.addParamValue('Col',[1 12],@(x)(numel(x) == 2 & all(x > 0 ))); 
-% ip.addParamValue('Col',[1 12],@(x)(numel(x) <= 2 & all(x > 0 ))); 
-ip.addParamValue('Col',[1 12]); %Trying to figure out how to past list from python to matlab through subprocess/popen
-ip.addParamValue('SaveFig',true,@islogical);
-ip.parse(varargin{:});          
-p = ip.Results;     
+%Set input variables
+%Eventually read from file
+%Also need proper error catching/messages
+inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB';
+outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output';
+NucMaskChan = [2 5]; %Is this basically number of cycles? 2:cycle num
+row = ['B':'D'];   
+col = [2:5];
+SaveFig = 0;
 
 
-% testPath = uigetdir%'Y:\sorger\data\IN Cell Analyzer 6000\Connor\June FDA CycIF Processed\Processed Plates\ProcessedDataP1';
-% testPath = './testImages';
-testPath = p.Path;
-NucMaskChan = str2num(p.NucMaskChan);
-row = p.Row(1):p.Row(2);
-colnum = str2num(p.Col);
-% col = p.Col(1):p.Col(2);
-col = colnum(1):colnum(2);
-
-testPath
-row
-col
-p.SaveFig
 
 for iRow = 1:numel(row)
     for iCol = 1:numel(col)
-    files = dir([testPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_*.tif']);
+    files = dir([inputPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_*.tif'])
     numFiles = numel(files);
     
 %     for iFile = 2:2:numFiles
@@ -52,9 +35,8 @@ for iRow = 1:numel(row)
         fileName = files(iFile).name;
         [pathstr,name,ext] = fileparts(fileName) ;
         
-        I = volumeRead([testPath filesep fileName]);
+        I = volumeRead([inputPath filesep fileName]);
         nucleiStack = [2 size(I,3)/4];
-        nucleiMaskChan = p.NucMaskChan;
         nucleiMaskChan = NucMaskChan;
         cytoChanRange = (size(I,3)-nucleiStack(2));
         cytoChanStart =size(I,3)/4+1;
@@ -178,10 +160,10 @@ for iRow = 1:numel(row)
                 variableCytoNames = cat(2,variableCytoNames,{['CytoplasmChannel' int2str(ivarName)]});
             end
 
-             writetable(array2table([meanIntTable areaTable centroidCellTable],'VariableNames',[variableNucNames variableCytoNames 'NucleusArea' 'CytoplasmArea' 'CellPosition_X' 'CellPosition_Y']),[testPath filesep '_' name '_cytoMasked.txt'],'Delimiter','\t')
+             writetable(array2table([meanIntTable areaTable centroidCellTable],'VariableNames',[variableNucNames variableCytoNames 'NucleusArea' 'CytoplasmArea' 'CellPosition_X' 'CellPosition_Y']),[inputPath filesep '_' name '_cytoMasked.txt'],'Delimiter','\t')
         end
         %% display
-        if p.SaveFig==1
+        if SaveFig==1
             cellEdge=edge(cells>0,'Sobel');
             nucleiEdge=edge(nuclei>0,'Sobel');
             allEdge= cellEdge + nucleiEdge;
@@ -202,13 +184,13 @@ for iRow = 1:numel(row)
             linkaxes(axs,'xy')
 
 
-            savefig ([testPath filesep '_' name '_cytoMasked.fig' ])
+            savefig ([inputPath filesep '_' name '_cytoMasked.fig' ])
             unmaskedImage = I(:,:,2:end);
             allChan=[];
             for i = 1:size(unmaskedImage,3)
                 allChan(:,:,i)  = 65000*(double(allEdge)+normalize((unmaskedImage(:,:,i))));
             end
-            tiffwriteimj(uint16(allChan), [testPath filesep '_' name '_cytoMasked' ext])
+            tiffwriteimj(uint16(allChan), [inputPath filesep '_' name '_cytoMasked' ext])
             close all
             disp(['Completed ' fileName])
         end
