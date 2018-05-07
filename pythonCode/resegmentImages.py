@@ -183,4 +183,16 @@ resegment_plate(platename)
 #        print('calling normalize with plate %s and ab_set %s' % (plate,ab))
 #        normalize_plate(plate,ab)
 
+#Normalize
+sigsets = ['signaling1','signaling2']
+protsets = ['proteome1','proteome2','proteome3']
+platenumber = platename[-1]
+if platenumber in ['1', '2', '3', '4', '5']:
+    ab_sets = sigsets
+else:
+    ab_sets = protsets
+
+for ab in ab_sets:
+    #print('calling normalize with plate %s and ab_set %s' % (,ab))
+    normalize_plate(platename,ab)
 
