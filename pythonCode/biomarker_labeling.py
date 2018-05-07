@@ -57,12 +57,12 @@ def labelBiomarkers(fn,markerList=None,bleached=1):
 
 
 ##########
-#Testing
-markerList = ['Rb-MAVS','LAMP2','M-IRF3','p-TBK1','NFAT-C1','NFkB','TMEM137','IRF5','COX4','STAT6','IRF7','IRF1','STAT5b','LC3A/B','STAT5a','Stat3','PKM2','p-mTOR']#,'p-p38 MAPK1','Stat1','p-Stat6']
-#Is this right order for labeling below?
-#Cycle 1: green (FITC?) - yellow (Cy3?) - red (Cy5?), Cycle 2 green - yellow - red, etc, doesn't specify 2o ab. 
-fn = '_B02_fld1_crop_cytoMasked.txt'
-numCycles=6
+##Testing
+#markerList = ['Rb-MAVS','LAMP2','M-IRF3','p-TBK1','NFAT-C1','NFkB','TMEM137','IRF5','COX4','STAT6','IRF7','IRF1','STAT5b','LC3A/B','STAT5a','Stat3','PKM2','p-mTOR']#,'p-p38 MAPK1','Stat1','p-Stat6']
+##Is this right order for labeling below?
+##Cycle 1: green (FITC?) - yellow (Cy3?) - red (Cy5?), Cycle 2 green - yellow - red, etc, doesn't specify 2o ab. 
+#fn = '_B02_fld1_crop_cytoMasked.txt'
+#numCycles=6
 
-df = labelBiomarkers(fn,markerList,1)
+#df = labelBiomarkers(fn,markerList,1)
 
