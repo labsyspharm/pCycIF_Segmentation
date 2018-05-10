@@ -64,7 +64,10 @@ for iRow = 1:numel(row)
 
         %% thresholding by Otsu
         I_bg(I_bg<0)=0;
-        nucleiMask = I_bg>thresholdOtsu(I_bg);
+        nucleiMask = I_bg>thresholdOtsu(I_bg);  
+        %Dilation - new variable - imdilate
+%         nucmask dila - subtract from cyto mask, replacing nuclei mask
+
 %         imshowlinkedtrio(normalize(double(nuclei)),normalize(double(I_bg)),nucleiMask)
 
         %% process mask
@@ -128,6 +131,7 @@ for iRow = 1:numel(row)
         end
         
         cytoplasm = cells-nuclei;
+        %% Change here - imrode of ~2 pixels on cytoplasm 
 %         imshowLinkedTuple(nuclei,cytoplasm,cells)
         
         %% measure intensities from regions
