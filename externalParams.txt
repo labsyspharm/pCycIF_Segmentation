@@ -15,9 +15,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB' 
-outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output'
+inputPath = '/home/rps21/pCycIF_Segmentation/insets_TxB' 
+outputPath = '/home/rps21/pCycIF_Segmentation/output'
 numCycles = 11 %Is this basically number of cycles? 2:cycle num
-row = ['B':'D'] 
-col = [2:5]
+row = ['B':'E'] 
+col = [2:11]
 SaveFig = 1
