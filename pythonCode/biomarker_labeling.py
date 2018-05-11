@@ -4,7 +4,7 @@ from copy import deepcopy
 #Need checks for length based on cycle number, check new col length vs old. 
     
 
-def labelBiomarkers(fn,markerList=None,bleached=1):
+def labelBiomarkers(fn,numCycles,markerList=None,bleached=1):
     columnLabels = []
     numMarkers = numCycles*4
     dapiList = []
@@ -51,7 +51,7 @@ def labelBiomarkers(fn,markerList=None,bleached=1):
     outputDF = deepcopy(originalDF)
     outputDF.columns = columnLabels
     newFN = fn.split('.')[0]+'.csv'
-    outputDF.to_csv(newFN)
+#    outputDF.to_csv(newFN)
 
     return outputDF
 
