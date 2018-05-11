@@ -1,6 +1,4 @@
 #!/usr/bin/python
-#TODO:
-#pick dynamic max value for re-normalization
 
 import pandas as pd
 import argparse
@@ -9,9 +7,19 @@ import sys
 import numpy as np
 import subprocess
 from biomarker_labeling import labelBiomarkers
-from processSegmentation import 
+from processSegmentation import normalizePlate
+from processSegmentation import setOutput
 
-#Take plate folder as input 
+#    subprocess.call(["/home/rps21/Cardiomyocite/segmentation/bobbySegmentCardioMyo/run_bobbySegmentCardiomyo_orchestra_addbackdapi.sh", "/home/rps21/MCR/v901/", '/n/scratch2/rps21/ResegmentedPlates/%s' % platename, nuclearstack, rows,
+
+subprocess.call(['/home/rps21/pCycIF_Segmentation/run_runSegmentationO2.sh','/home/rps21/MCR/v901/','externalParams.txt'])
+outputFolders = setOutput('externalParams.txt')
+#Need to read these inputs more effectively. 
+numCycles = 6 
+markerList = ['Rb-MAVS','LAMP2','M-IRF3','p-TBK1','NFAT-C1','NFkB','TMEM137','IRF5','COX4','STAT6','IRF7','IRF1','STAT5b','LC3A/B','STAT5a','Stat3','PKM2','p-mTOR']
+normalizePlate(outputFolders,markerList,numCycles)
+
+
 
 
 
@@ -29,12 +37,11 @@ from processSegmentation import
 
 
 
-def resegment(imageFile):
+#def resegment(imageFile):
 
-    print('/n/scratch2/rps21/ResegmentedPlates/%s' % platename, nuclearstack, rows, cols)
-    subprocess.call(["/home/rps21/pCycIF_Segmentation/run_runSegmentationO2.sh /home/rps21/MCR/v901/ externalParams.txt"])
+#    print('/n/scratch2/rps21/ResegmentedPlates/%s' % platename, nuclearstack, rows, cols)
+#    subprocess.call(["/home/rps21/pCycIF_Segmentation/run_runSegmentationO2.sh /home/rps21/MCR/v901/ externalParams.txt"])
 
-#    print('done segmenting %s' % plate)
 
 
 
@@ -53,6 +60,6 @@ def resegment(imageFile):
 #combine fields.
 #organize files. 
 
-resegment_plate(platename)
+
 
 

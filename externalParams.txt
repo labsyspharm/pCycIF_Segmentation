@@ -17,7 +17,7 @@
 
 inputPath = '/home/rps21/pCycIF_Segmentation/insets_TxB' 
 outputPath = '/home/rps21/pCycIF_Segmentation/output'
-numCycles = 11 %Is this basically number of cycles? 2:cycle num
+numCycles = 6 %Is this basically number of cycles? 2:cycle num
 row = ['B':'E'] 
 col = [2:11]
 SaveFig = 1

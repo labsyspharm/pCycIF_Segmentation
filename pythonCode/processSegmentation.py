@@ -6,29 +6,42 @@ import glob
 import sys 
 import numpy as np
 import subprocess
-
+import os
+from biomarker_labeling import labelBiomarkers
 
 #This gets file names
 #To start want to we write everything with same first three characters (row/col) to one df/file 
 #get from fn.split('/')[-1].split('_')[0]
 
-with open('../externalParams.txt') as paramFile:
-    paramLines = paramFile.readlines()
-for line in paramLines:
-    if 'outputPath' in line and '=' in line:
-        outputLine = line
-outputFolder = outputLine.split('=')[1].split('%')[0].strip()
-outputFolder = outputFolder.strip('\'')
+def setOutput(paramsFN):
+    with open('externalParams.txt') as paramFile:   #File location is an issue
+        paramLines = paramFile.readlines()
+    for line in paramLines:
+        if 'outputPath' in line and '=' in line:
+            outputLine = line
+    outputFolder = outputLine.split('=')[1].split('%')[0].strip()
+    outputFolder = outputFolder.strip('\'')
+
+    normalizedOutput = outputFolder+'/normalized/'
+    if not os.path.exists(normalizedOutput):
+        os.makedirs(normalizedOutput)
+    print(normalizedOutput)
+
+    folders = [outputFolder,normalizedOutput]    
+
+    return folders
 
 
-#for fn in sorted(glob.glob(folderToSegment+'/*.tif')):
-#    resegment(fn)
 
-def normalize_plate(outputFolder):
+def normalizePlate(outputFolders,markerList,numCycles):
+
+    outputFolder = outputFolders[0]
+    normalizedOutputFolder = outputFolders[1]
 
     #mkdir for normalized output      
     for fn in sorted(glob.glob(outputFolder+'/_*.txt')):
-        df = pd.read_table(fn)
+#        df = pd.read_table(fn)
+        df = labelBiomarkers(fn,numCycles,markerList,1)
         #Normalize data
         for col in df.columns:
 
@@ -50,19 +63,25 @@ def normalize_plate(outputFolder):
 
         #output normalized data:
         #If normalized file for well, open and append, otherwise new 
-        #well = fn.split('/')[-1].split('_')[0]
-        if filenum == 1:
-            filenum = 2
-            finaldf = df
-        else:
-            finaldf = pd.concat([finaldf,df],axis=0,ignore_index=True)
-
+        well = fn.split('/')[-1].split('_')[0]
+        #for fn2 in sorted(glob.glob(normalizedOutputFolder)):
+            #if well in fn2:
+            #    wellData=pd.read_table(fn)
+            #    wellData.concat(df)
+            #    wellData.to_csv(fn2)
+            #else:
         filename = fn
-        filename_out = 'resegmented_normalized_logtransformed_%s_%s.csv' % (plate, ab_set) 
-        finaldf.to_csv(filename_out)
+        filename_out = normalizedOutputFolder + 'normalized' + filename.split('/')[-1]
+        print(filename_out)
+        df.to_csv(filename_out)
 
+    return finaldf
 
-
+#markerList = ['Rb-MAVS','LAMP2','M-IRF3','p-TBK1','NFAT-C1','NFkB','TMEM137','IRF5','COX4','STAT6','IRF7','IRF1','STAT5b','LC3A/B','STAT5a','Stat3','PKM2','p-mTOR']#,'p-p38 MAPK1','Stat1','p-Stat6']
+##Is this right order for labeling below?
+##Cycle 1: green (FITC?) - yellow (Cy3?) - red (Cy5?), Cycle 2 green - yellow - red, etc, doesn't specify 2o ab. 
+#fn = '_B02_fld1_crop_cytoMasked.txt'
+#numCycles=6
 
 #TODO:
 #Histograms stretching
