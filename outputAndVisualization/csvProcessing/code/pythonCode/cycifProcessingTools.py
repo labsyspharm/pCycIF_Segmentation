@@ -6,32 +6,59 @@ import glob
 import os
 
 
-def clusterNuclei(fn):
+#def clusterNuclei(fn):
+
+#    df = pd.read_csv(fn)    
+#    colNames = list(df.columns)
+#    nucleiCols = [col for col in colNames if 'DNA' in col and 'Nuc' in col]
+#    nuclei = df.filter(items=nucleiCols)
+
+#    model = KMeans(n_clusters=2,init='k-means++')
+#    model.fit(nuclei.values)  
+#    labels = model.labels_  
+#    clusters = pd.DataFrame(data=labels,columns=['cluster'])
+#    centers = model.cluster_centers_
+#    liveCluster = np.argmax([np.mean(centers[0,]),np.mean(centers[1,])])
+#    idx = clusters.index[clusters['cluster']==liveCluster].tolist()
+#    livecells = df.loc[idx]
+#    
+#    print('Num of live cells is %s' % livecells.shape[0])
+#    print('Num of all cells is %s' % nuclei.shape[0])
+
+#    #Should probably be able to output a file here
+#    return livecells
+
+
+def thresholdNuclei(fn):
 
     df = pd.read_csv(fn)    
-    if 'sig' in fn:
-        nuclei = df.filter(items=['DNA-1_Nuc', 'DNA-2_Nuc', 'DNA-3_Nuc', 'DNA-4_Nuc','DNA-5_Nuc'])
-    elif 'prot' in fn:
-        nuclei = df.filter(items=['DNA-1_Nuc', 'DNA-2_Nuc', 'DNA-3_Nuc', 'DNA-4_Nuc'])
+    colNames = list(df.columns)
+    nucleiCols = [col for col in colNames if 'DNA' in col and 'Nuc' in col]
+    nuclei = df.filter(items=nucleiCols)
+    keyVal = df[nucleiCols[0]].mean()*.5
+    for col in nucleiCols:
+        liveCells = df[df[col]>=keyVal]
+        deadCells = df[df[col]<keyVal]
 
-    model = KMeans(n_clusters=2,init='k-means++')
-    model.fit(nuclei.values)  
-    labels = model.labels_  
-    clusters = pd.DataFrame(data=labels,columns=['cluster'])
-    centers = model.cluster_centers_
-    liveCluster = np.argmax([np.mean(centers[0,]),np.mean(centers[1,])])
-    idx = clusters.index[clusters['cluster']==liveCluster].tolist()
-    livecells = df.loc[idx]
-    
-    print('Num of live cells is %s' % livecells.shape[0])
-    print('Num of all cells is %s' % nuclei.shape[0])
+    print('Num of live cells is %s' % liveCells.shape[0])
+    print('Num of lost cells is %s' % deadCells.shape[0])
+    outputFN = 'cellsFiltered_'+fn
+    liveCells.to_csv(outputFN)
 
-    return livecells
+    return outputFN
 
-def normalizeNC(fn,df):
+#Could also attempt boolean mask, maybe in numpy
+#Write function and use  apply on all cols
+
+
+
+def normalizeNC(fn,df=None):
+    #Is it necessary to require df input? 
     nucColumns = []
+    if not df:
+        df = pd.read_csv(fn)   
     for col in df.columns:
-        if 'Nuc' in col:
+        if '_Nuc' in col:
             nucColumns.append(col)
 
     for col in nucColumns:
@@ -42,55 +69,67 @@ def normalizeNC(fn,df):
         newname = str(col.split('_')[:-1][0]) + '_NC_Ratio'
         df[newname] = col_nc_ratio
 #    if writeFile:
-#        abset = fn.split('.')[0][:-1].split('_')[-1]
-#        drug = drugName
+    df.to_csv('NCRatio_'+fn)
+    return df
+
+
+
+#More compelex file writing?
+
 #        dirName = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/newSegmentationData/dapiAdded/csvProcessing/doseSeparated/%s/highdose/%s/' % (abset, drug)
 #        if not os.path.exists(dirName):
 #            os.makedirs(dirName)
 #        highdose.to_csv(dirName+'highdose_%s' % (fn.split('/')[-1]))
-    return df
 
-def splitDoses(fn,df):
-    if 'signaling' in fn:
-        highdose = 10
-    else:
-        if 'P6' in fn:
-            if 'proteome3' in fn:
-                highdose = 3
-            else:
-                highdose = 10
-        else:
-            highdose = 3
 
-    highdose_idx = df.index[df['Dose']==highdose].tolist()
-    highdose = df.loc[highdose_idx]
+
+
+
+
+######################
+#Less generalizable under here
+
+#def splitDoses(fn,df):
+#    if 'signaling' in fn:
+#        highdose = 10
+#    else:
+#        if 'P6' in fn:
+#            if 'proteome3' in fn:
+#                highdose = 3
+#            else:
+#                highdose = 10
+#        else:
+#            highdose = 3
+
+#    highdose_idx = df.index[df['Dose']==highdose].tolist()
+#    highdose = df.loc[highdose_idx]
 
 #        lowdose_idx = df.index[df['Dose']==1].tolist()
 #        lowdose = df.loc[lowdose_idx]
-    
-    return highdose
+#    
+#    return highdose
 
 
-def splitDrugs(fn,df,writeFile=None):
-    drugIndexList = list(range(2,12))
-    drugDfList = []
-    drugDict = {2:'Afatinib',3:'Dasatinib',4:'Gefitinib',5:'Lapatinib',6:'Nilotinib',7:'Sorafenib',8:'Sunitinib',9:'Crizotinib',10:'Ponatinib',11:'DMSO'}
-    for drugID in drugIndexList:
-        drugName = drugDict[drugID]
-        drug_idx = df.index[df['Drug']==drugID].tolist()   
-        drug_df = df.loc[drug_idx]
+#def splitDrugs(fn,df,writeFile=None):
+#    drugIndexList = list(range(2,12))
+#    drugDfList = []
+#    drugDict = {2:'Afatinib',3:'Dasatinib',4:'Gefitinib',5:'Lapatinib',6:'Nilotinib',7:'Sorafenib',8:'Sunitinib',9:'Crizotinib',10:'Ponatinib',11:'DMSO'}
+#    for drugID in drugIndexList:
+#        drugName = drugDict[drugID]
+#        drug_idx = df.index[df['Drug']==drugID].tolist()   
+#        drug_df = df.loc[drug_idx]
 
 #        dose_df = splitDoses(fn,drugName,drug_df)
-        drugDfList.append(drug_df)
+#        drugDfList.append(drug_df)
 
-        if writeFile:
-            abset = fn.split('.')[0][:-1].split('_')[-1]
-            dirName = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/newSegmentationData/dapiAdded/csvProcessing/tfRatios/spreadsheets/%s/highdose/%s/' % (abset, drugName)
-            print(dirName)
-            if not os.path.exists(dirName):
-                os.makedirs(dirName)
-            drug_df.to_csv(dirName+'%s_highdose_%s' % (drugName, fn.split('/')[-1]) )
-    return drugDfList
+#        if writeFile:
+#            abset = fn.split('.')[0][:-1].split('_')[-1]
+#            dirName = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/newSegmentationData/dapiAdded/csvProcessing/tfRatios/spreadsheets/%s/highdose/%s/' % (abset, drugName)
+#            print(dirName)
+#            if not os.path.exists(dirName):
+#                os.makedirs(dirName)
+#            drug_df.to_csv(dirName+'%s_highdose_%s' % (drugName, fn.split('/')[-1]) )
+#    return drugDfList
 
 
 
