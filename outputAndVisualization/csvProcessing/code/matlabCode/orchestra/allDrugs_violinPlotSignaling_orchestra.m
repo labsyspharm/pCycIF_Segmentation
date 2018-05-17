@@ -1,18 +1,16 @@
 function buildViolinPlots()
 
     warning('off','all')
-
     set(0,'DefaultFigureVisible','off');
     set(0,'defaultfigurecolor',[1 1 1])
+    parpool(10)
+
     %TO DO:
     %Add signaling dir
+    %Automate file/folder handling, make input variable 
     %Change output folder/file name to include plate/ab_set
 
     drugs = dir('/home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/*');
-%     drugs
-%     drugs.name
-    % Rarfor drug = 3:length(drugs) %Cut out ., .., dmso at end
-    parpool(10)
 
     parfor index = 3:12 %length(drugs) %Cut out ., .., dmso at end
 
@@ -21,17 +19,15 @@ function buildViolinPlots()
         filesDrug = dir(['/home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/' drugName '/*']);
         filesDrug = filesDrug(3:end);
         
+        %Output drug being processed to console
         printDrug(drugName)
+        
         %Keep DMSO separate, need at every iteration. 
         filesdmso = dir('/home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/DMSO/*');
         filesdmso = filesdmso(3:end);
 
         %%%%%%%%%%%%%%%%
-        % % dirname = 'home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/newSegmentationData/dapiAdded/csvProcessing/csv/proteome/';
-        % filesdmso = dir(' /home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/dmso/*');
-        % filesdmso = filesdmso(3:end);
-        % filessoraf = dir(' /home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/soraf/*');
-        % filessoraf = filessoraf(3:end);
+
 
         dmsodir = '/home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/DMSO/';
         drugdir = ['/home/rps21/Cardiomyocite/segmentation/plotResults/tfRatios/spreadsheets/signaling/highdose/' drugName '/']; 
@@ -40,16 +36,9 @@ function buildViolinPlots()
 %         %name. 
 %         %know there will be 4 tps, 2 abs for sig and 3 tps, 3 abs for prot
 %         %split on ab, do timepoints in order, plot histograms in subplot form
-%         % {'highdose_soraf_ProcessedDataP8_proteome3.csv'}
 % 
         ab_sets = {'signaling1','signaling2'};
-%     %     ab_sets_len = length(ab_sets)
-%     %     for i = 1:ab_sets_len
-%     %         matches = strfind({filesdmso(:).name},ab_sets{i});
-%     %         filesdrug_absplit{i} = filesDrug(find(~cellfun(@isempty,matches)));
-%     %         filesdmso_absplit{i} = filesdmso(find(~cellfun(@isempty,matches)));
-%     %     end
-% 
+        
         filesdrug_absplit = cell(1,2);
         filesdmso_absplit = cell(1,2);
 
