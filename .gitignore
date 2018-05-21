@@ -8,3 +8,5 @@ readme.txt
 mccExcludedFiles.log
 
 output/
+outputAndVisualization/csvProcessing/code/matlabCode/testOutput/
+
