@@ -5,28 +5,18 @@ import numpy as np
 import glob 
 import os
 
+#    """Explanation...
 
-#def clusterNuclei(fn):
-
-#    df = pd.read_csv(fn)    
-#    colNames = list(df.columns)
-#    nucleiCols = [col for col in colNames if 'DNA' in col and 'Nuc' in col]
-#    nuclei = df.filter(items=nucleiCols)
-
-#    model = KMeans(n_clusters=2,init='k-means++')
-#    model.fit(nuclei.values)  
-#    labels = model.labels_  
-#    clusters = pd.DataFrame(data=labels,columns=['cluster'])
-#    centers = model.cluster_centers_
-#    liveCluster = np.argmax([np.mean(centers[0,]),np.mean(centers[1,])])
-#    idx = clusters.index[clusters['cluster']==liveCluster].tolist()
-#    livecells = df.loc[idx]
+#    Parameters
+#    ----------
 #    
-#    print('Num of live cells is %s' % livecells.shape[0])
-#    print('Num of all cells is %s' % nuclei.shape[0])
+#    Returns
+#    -------
+#      """
 
-#    #Should probably be able to output a file here
-#    return livecells
+#    logger.info('Filtering %d statements for top-level...' % len(stmts_in))
+#logger = logging.getLogger('assemble_corpus')
+#indra_logger = logging.getLogger('indra').setLevel(logging.DEBUG)
 
 
 def thresholdNuclei(fn):
@@ -40,21 +30,25 @@ def thresholdNuclei(fn):
         liveCells = df[df[col]>=keyVal]
         deadCells = df[df[col]<keyVal]
 
-    print('Num of live cells is %s' % liveCells.shape[0])
-    print('Num of lost cells is %s' % deadCells.shape[0])
+#    print('Num of live cells is %s' % liveCells.shape[0])
+#    print('Num of lost cells is %s' % deadCells.shape[0])
 
-    print(fn)
-#    baseFolder = 
-#    newFolder = #Add a ../ here? Eventually keep all output folders on same level, instead of a deep tree. Need to think about naming - use all transformations or only most recent?
-#    if not os.path.exists(newFolder):
-#        os.makedirs(newFolder)
-#    outputFN = newFolder+fn
-#    liveCells.to_csv(outputFN)
+    path = os.path.dirname(os.path.abspath(__file__))
+    baseFolder = path + '/../../../output/'
 
-#    return outputFN
+    newFolder = baseFolder + 'filteredCells/'
+    if not os.path.exists(newFolder):
+        os.makedirs(newFolder)
+
+    baseFile = fn.split('/')[-1] #Is fully generalizable?
+    outputFN = newFolder+baseFile
+    liveCells.to_csv(outputFN)
+
+    return outputFN
 
 #Could also attempt boolean mask, maybe in numpy
 #Write function and use  apply on all cols
+
 
 
 
@@ -74,20 +68,19 @@ def normalizeNC(fn,df=None):
         col_nc_ratio = col_nuc/col_cyt
         newname = str(col.split('_')[:-1][0]) + '_NC_Ratio'
         df[newname] = col_nc_ratio
-#    if writeFile:
-    df.to_csv('NCRatio_'+fn)
+
+    path = os.path.dirname(os.path.abspath(__file__))
+    baseFolder = path + '/../../../output/'
+
+    newFolder = baseFolder + 'NCRatio/'
+    if not os.path.exists(newFolder):
+        os.makedirs(newFolder)
+
+    baseFile = fn.split('/')[-1] #Is fully generalizable?
+    outputFN = newFolder+baseFile
+    df.to_csv(outputFN)
+
     return df
-
-
-
-#More compelex file writing?
-
-#        dirName = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/newSegmentationData/dapiAdded/csvProcessing/doseSeparated/%s/highdose/%s/' % (abset, drug)
-#        if not os.path.exists(dirName):
-#            os.makedirs(dirName)
-#        highdose.to_csv(dirName+'highdose_%s' % (fn.split('/')[-1]))
-
-
 
 
 
@@ -187,3 +180,24 @@ def normalizeNC(fn,df=None):
 #        pRbLoCells = None
 
 #    return pRbHiCells, pRbLoCells
+
+#def clusterNuclei(fn):
+
+#    df = pd.read_csv(fn)    
+#    colNames = list(df.columns)
+#    nucleiCols = [col for col in colNames if 'DNA' in col and 'Nuc' in col]
+#    nuclei = df.filter(items=nucleiCols)
+
+#    model = KMeans(n_clusters=2,init='k-means++')
+#    model.fit(nuclei.values)  
+#    labels = model.labels_  
+#    clusters = pd.DataFrame(data=labels,columns=['cluster'])
+#    centers = model.cluster_centers_
+#    liveCluster = np.argmax([np.mean(centers[0,]),np.mean(centers[1,])])
+#    idx = clusters.index[clusters['cluster']==liveCluster].tolist()
+#    livecells = df.loc[idx]
+#    
+#    print('Num of live cells is %s' % livecells.shape[0])
+#    print('Num of all cells is %s' % nuclei.shape[0])
+
+#    return livecells
