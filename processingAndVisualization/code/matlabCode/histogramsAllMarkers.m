@@ -9,7 +9,7 @@ files = files(3:end);
 %Can we extract row/col/fld from here?
 %loop through and find files for control when specified here?
 
-filesdir = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output/normalized/filteredNC/';
+filesdir = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output/NCRatio/';
   
 for i = 1:size(files,1) %time point
     fileData = readtable([filesdir files(i).name]);
@@ -28,7 +28,7 @@ for i = 1:size(files,1) %time point
         set(gca,'fontsize',14,'fontname','Arial');
         hold off
     
-        folderBase = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/outputAndVisualization/csvProcessing/code/matlabCode/testOutput/';  %Make input variable or extrapolated from above
+        folderBase = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/processingAndVisualization/testOutput/allMarkers/';  %Make input variable or extrapolated from above
         inputFile = strsplit(files(i).name,'.');
         inputFileName = [inputFile{1} '/'];
         %check/create folder here
