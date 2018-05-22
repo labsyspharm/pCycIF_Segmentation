@@ -1,11 +1,9 @@
 set(0,'DefaultFigureVisible','off');
 set(0,'defaultfigurecolor',[1 1 1])
 %TO DO:
-%Add signaling dir
-%Change output folder/file name to include plate/ab_set
+%Fix file name inputs
 
-
-files = dir('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output/normalized/filteredNC/*.txt');   %Make base an input variable
+files = dir('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output/NCRatio/*.txt');   %Make base an input variable
 files = files(3:end);
 
 %Can we extract row/col/fld from here?
@@ -30,7 +28,7 @@ for i = 1:size(files,1) %time point
         set(gca,'fontsize',14,'fontname','Arial');
         hold off
     
-        folderBase = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/outputAndVisualization/csvProcessing/code/matlabCode/testOutput/'  %Make input variable or extrapolated from above
+        folderBase = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/outputAndVisualization/csvProcessing/code/matlabCode/testOutput/';  %Make input variable or extrapolated from above
         inputFile = strsplit(files(i).name,'.');
         inputFileName = [inputFile{1} '/'];
         %check/create folder here
