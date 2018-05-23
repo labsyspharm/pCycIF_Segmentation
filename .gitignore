@@ -7,6 +7,9 @@ requiredMCRProducts.txt
 readme.txt
 mccExcludedFiles.log
 
+#Output data
 output/
-outputAndVisualization/csvProcessing/code/matlabCode/testOutput/
+processingAndVisualization/testOutput/
 
+#Input data
+insets_TxB/
