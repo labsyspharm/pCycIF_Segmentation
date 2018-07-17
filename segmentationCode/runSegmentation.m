@@ -12,27 +12,16 @@ function [] = runSegmentation(parametersFile)
 
 javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/bobbySegmentCardioMyo/bfmatlab/bioformats_package.jar')
 
-
-%Reads file with input parameters, written in Matlab syntax
-fid = fopen(parametersFile);
-inputParams = textscan(fid, '%s', 'Delimiter', '', 'CommentStyle', '%');
-fclose(fid);
-%Evaluates and sets input parameters as Matlab varialbes
-cellfun(@eval, inputParams{1});
+[params] = YAML.read(parametersFile);
+inputPath = params.inputPath;
+outputPath = params.outputPath;
+numCycles = params.numCycles;
+row = params.row;
+col = params.col;
+SaveFig = params.SaveFig;
 
 %Set NucMaskChan from numCycles = 5;
 NucMaskChan = 2:numCycles;
-
-
-%Set input variables read from file
-%Need to add error catching/messages
-% inputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB';
-% outputPath = '/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/output';
-% NucMaskChan = [2 5]; %Is this basically number of cycles? 2:cycle num
-% row = ['B':'D'];   
-% col = [2:5];
-% SaveFig = 0;
-
 
 
 for iRow = 1:numel(row)

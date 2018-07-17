@@ -12,13 +12,14 @@ function [] = runSegmentation(parametersFile)
 
 javaaddpath('matlabDependencies/bfmatlab/bioformats_package.jar')
 
-
 %Reads file with input parameters, written in Matlab syntax
-fid = fopen(parametersFile);
-inputParams = textscan(fid, '%s', 'Delimiter', '', 'CommentStyle', '%');
-fclose(fid);
-%Evaluates and sets input parameters as Matlab varialbes
-cellfun(@eval, inputParams{1});
+[params] = YAML.read(parametersFile);
+inputPath = params.inputPath;
+outputPath = params.outputPath;
+numCycles = params.numCycles;
+row = params.row;
+col = params.col;
+SaveFig = params.SaveFig;
 
 %Set NucMaskChan from numCycles = 5;
 NucMaskChan = 2:numCycles;
