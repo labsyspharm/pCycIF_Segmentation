@@ -13,3 +13,15 @@ processingAndVisualization/testOutput/
 
 #Input data
 insets_TxB/
+segmentationCode/externalParamsLocal.txt
+pRb_NC_testing/
+
+#Example files
+dockerBuild/ashlarExamples
+
+#Compiled files
+*.sh
+*runSegmentation
+*runSegmentationO2
+compilationFiles/
+dockerBuild/runSegmentation
