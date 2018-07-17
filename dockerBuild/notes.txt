@@ -1,0 +1,38 @@
+for inspecting container
+docker run -it --entrypoint /bin/bash segment
+
+
+sudo mount -o bind /home/bobby/MATLAB_Runtime/ MATLAB_Runtime_mnt/
+sudo umount MATLAB_Runtime/
+
+
+docker build -t segment .
+docker run segment
+
+
+docker run -v /path/to/results:/input -v /path/to/results:/output segment
+
+
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -a -q)
+
+/media/bobby/OS
+
+./run_runSegmentation.sh /opt/mcr/v94/ externalParams.txt 
+
+
+Error using images.internal.morphop
+Can't reload '/opt/mcr/v94/bin/glnxa64/libmwcoder_types.so'
+
+Error in imdilate (line 135)
+
+
+Error in strel>MakeDiskStrel (line 1103)
+
+
+Error in strel (line 205)
+
+
+Error in runSegmentation (line 61)
+
+
