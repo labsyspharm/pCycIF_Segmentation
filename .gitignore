@@ -10,6 +10,7 @@ mccExcludedFiles.log
 #Output data
 output/
 processingAndVisualization/testOutput/
+segmentationOutput/
 
 #Input data
 insets_TxB/
