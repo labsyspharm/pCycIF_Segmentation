@@ -1,0 +1,6 @@
+inputPath: '/mnt/input'
+outputPath: '/mnt/output'
+numCycles: 4
+row: 'BCD'
+col: [2,3,4]
+SaveFig: 1
