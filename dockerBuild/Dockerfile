@@ -1,8 +1,7 @@
 FROM ubuntu
 
-# Install the MCR dependencies and some things we'll need and download the MCR
-# from Mathworks -silently install it
-#RUN apt-get -qq update && apt-get -qq install -y \
+# Install the MCR dependencies and some things we'll need and download the MCR from Mathworks -silently install it
+
 RUN apt-get update &&\
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
@@ -14,9 +13,8 @@ RUN apt-get update &&\
     wget \
     curl \
     libxt6 \
-    python-dev \
-    python-pip \
-    python-tk && \
+    python3-dev \
+    python3-pip && \
     mkdir /mcr-install && \
     mkdir /opt/mcr && \
     cd /mcr-install && \
@@ -34,26 +32,27 @@ ENV XAPPLRESDIR /opt/mcr/v94/X11/app-default
 
 
 
-RUN pip install -q -U \
+RUN pip3 install -q -U \
     pip \
     numpy \
+    PyYAML \
     pandas 
 
 # Set the working directory to /app
 # Is this what should be the input directory?
 # . should have necessary matlab and python code
+VOLUME /mnt/input
+VOLUME /mnt/output
 VOLUME /data
 WORKDIR /data
-
+#
 ADD . /data
 
 
 
 # Run app.py when the container launches
-CMD ["python", "segmentImages.py"]
+CMD ["python3", "segmentImages.py"]
 
 
 
-# Define environment variable
-#Java path?
-#ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
