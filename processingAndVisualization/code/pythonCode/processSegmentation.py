@@ -13,69 +13,45 @@ from biomarker_labeling import labelBiomarkers
 #To start want to we write everything with same first three characters (row/col) to one df/file 
 #get from fn.split('/')[-1].split('_')[0]
 
-def setOutput(paramsFN):
-    with open('externalParams.txt') as paramFile:   #File location is an issue
-        paramLines = paramFile.readlines()
-    for line in paramLines:
-        if 'outputPath' in line and '=' in line:
-            outputLine = line
-    outputFolder = outputLine.split('=')[1].split('%')[0].strip()
-    outputFolder = outputFolder.strip('\'')
-
-    normalizedOutput = outputFolder+'/normalized/'
-    if not os.path.exists(normalizedOutput):
-        os.makedirs(normalizedOutput)
-    print(normalizedOutput)
-
-    folders = [outputFolder,normalizedOutput]    
-
-    return folders
 
 
 
-def normalizePlate(outputFolders,markerList,numCycles):
+def normalizePlate(fn,numCycles,markerList=None):
 
-    outputFolder = outputFolders[0]
-    normalizedOutputFolder = outputFolders[1]
+#    outputFolder = outputFolders[0]
+#    normalizedOutputFolder = outputFolders[1]
 
     #mkdir for normalized output      
-    for fn in sorted(glob.glob(outputFolder+'/_*.txt')):
+#    for fn in sorted(glob.glob(outputFolder+'/_*.txt')):
+
+
 #        df = pd.read_table(fn)
-        df = labelBiomarkers(fn,numCycles,markerList,1)
-        #Normalize data
-        for col in df.columns:
+    df = labelBiomarkers(fn,numCycles,markerList,1)
+    #Normalize data
+    for col in df.columns:
 
-            #Include optional list of non intesnity columns
-            #Will save them in separate df, exclude from normalization, add back in later.
-            #May be good to automate searching for this type of column, but for now can feed a list.
-            nonIntCols = ['NucleusArea','CytoplasmArea','CellPosition_X','CellPosition_Y']
-            optDF = pd.DataFrame() 
-            if col in nonIntCols:
-                optDF[col] = df[col]
-            else:
-                df[col] = df[col].apply(np.log2)
+        #Include optional list of non intesnity columns
+        #Will save them in separate df, exclude from normalization, add back in later.
+        #May be good to automate searching for this type of column, but for now can feed a list.
+        nonIntCols = ['NucleusArea','CytoplasmArea','CellPosition_X','CellPosition_Y']
+        optDF = pd.DataFrame() 
+        if col in nonIntCols:
+            optDF[col] = df[col]
+        else:
+            df[col] = df[col].apply(np.log2)
 
-        df = df.replace('', np.nan)
-        df = df.replace(0, np.nan)  #Could this have any negative consequences?
-        df = df.replace(float('-inf'), np.nan)
-        df = df.replace(np.inf, np.nan)
-        df = df.dropna() #default options should be appropriate
+    df = df.replace('', np.nan)
+    df = df.replace(0, np.nan)  #Could this have any negative consequences?
+    df = df.replace(float('-inf'), np.nan)
+    df = df.replace(np.inf, np.nan)
+    df = df.dropna() #default options should be appropriate
 
-        #output normalized data:
-        #If normalized file for well, open and append, otherwise new 
-        well = fn.split('/')[-1].split('_')[0]
-        #for fn2 in sorted(glob.glob(normalizedOutputFolder)):
-            #if well in fn2:
-            #    wellData=pd.read_table(fn)
-            #    wellData.concat(df)
-            #    wellData.to_csv(fn2)
-            #else:
-        filename = fn
-        filename_out = normalizedOutputFolder + 'normalized' + filename.split('/')[-1]
+    #output normalized data:
+#        filename_out = normalizedOutputFolder + 'normalized' + filename.split('/')[-1]
 #        print(filename_out)
 #        df.to_csv(filename_out)
 
-    return finaldf
+    return df
 
 #markerList = ['Rb-MAVS','LAMP2','M-IRF3','p-TBK1','NFAT-C1','NFkB','TMEM137','IRF5','COX4','STAT6','IRF7','IRF1','STAT5b','LC3A/B','STAT5a','Stat3','PKM2','p-mTOR']#,'p-p38 MAPK1','Stat1','p-Stat6']
 ##Is this right order for labeling below?
@@ -112,7 +88,25 @@ def normalizePlate(outputFolders,markerList,numCycles):
 #            df['Drug'] = pd.Series([drug]*len(df.index),index = df.index)
 
 
+#multiple output folders for various analyses 
 
+#def setOutput(paramsFN):
+#    with open('externalParams.txt') as paramFile:   #File location is an issue
+#        paramLines = paramFile.readlines()
+#    for line in paramLines:
+#        if 'outputPath' in line and '=' in line:
+#            outputLine = line
+#    outputFolder = outputLine.split('=')[1].split('%')[0].strip()
+#    outputFolder = outputFolder.strip('\'')
+
+#    normalizedOutput = outputFolder+'/normalized/'
+#    if not os.path.exists(normalizedOutput):
+#        os.makedirs(normalizedOutput)
+#    print(normalizedOutput)
+
+#    folders = [outputFolder,normalizedOutput]    
+
+#    return folders
 
 
 

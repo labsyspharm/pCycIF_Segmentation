@@ -49,7 +49,7 @@ def labelBiomarkers(fn,numCycles,markerList=None,bleached=1):
 
     originalDF = pd.read_table(fn)
     outputDF = deepcopy(originalDF)
-    outputDF.columns = columnLabels
+    outputDF.columns = columnLabels #Here. column labels must be wrong. 
     newFN = fn.split('.')[0]+'.csv'
 #    outputDF.to_csv(newFN)
 
