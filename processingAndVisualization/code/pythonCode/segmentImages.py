@@ -8,7 +8,7 @@ import numpy as np
 import subprocess
 import yaml
 import os
-from biomarker_labeling import labelBiomarkers
+from processSegmentation import labelBiomarkers
 from processSegmentation import normalizePlate
 
 
@@ -27,12 +27,13 @@ if not os.path.exists(newFolder):
 
 for fn in sorted(glob.glob(outputPath+'/*.txt')):
     #fill biomarkers
-    #df = labelBiomarkers(fn,numCycles,markerList=None,bleached=1)
-    #now in normalize plate. 
-    #run normalization
-    df=normalizePlate(fn,numCycles,markerList=None)   #create new output subdirectory?
+    df = labelBiomarkers(fn,numCycles,markerList=None,bleached=1)
+    filename_out = newFolder + 'name' + fn.split('/')[-1]
+    df.to_csv(filename_out)
+    #clean and log-transform data
+    df = normalizePlate(df)   #create new output subdirectory?
     #Save file
-    filename_out = newFolder + fn.split('/')[-1]
+    filename_out = newFolder + 'norm' + fn.split('/')[-1]
     df.to_csv(filename_out)
 
 
