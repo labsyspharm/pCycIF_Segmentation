@@ -72,8 +72,8 @@ def normalizePlate(outputFolders,markerList,numCycles):
             #else:
         filename = fn
         filename_out = normalizedOutputFolder + 'normalized' + filename.split('/')[-1]
-        print(filename_out)
-        df.to_csv(filename_out)
+#        print(filename_out)
+#        df.to_csv(filename_out)
 
     return finaldf
 
