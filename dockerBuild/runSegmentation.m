@@ -11,6 +11,7 @@ function [] = runSegmentation(parametersFile)
 
 
 javaaddpath('matlabDependencies/bfmatlab/bioformats_package.jar')
+javaaddpath('matlabDependencies/yaml/java/snakeyaml-1.9.jar')
 
 %Reads file with input parameters, written in Matlab syntax
 [params] = YAML.read(parametersFile);
