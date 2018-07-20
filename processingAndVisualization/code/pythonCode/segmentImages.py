@@ -19,7 +19,8 @@ with open('config.yaml') as stream:
     options = yaml.load(stream)
 outputPath = options['outputPath']
 numCycles = options['numCycles']
-
+markerList = options['markerList']
+bleached = options['bleachImaged']
 
 newFolder = outputPath+'/processedOutput/'
 if not os.path.exists(newFolder):
@@ -27,7 +28,7 @@ if not os.path.exists(newFolder):
 
 for fn in sorted(glob.glob(outputPath+'/*.txt')):
     #fill biomarkers
-    df = labelBiomarkers(fn,numCycles,markerList=None,bleached=1)
+    df = labelBiomarkers(fn,numCycles,markerList,bleached)
     filename_out = newFolder + 'name' + fn.split('/')[-1]
     df.to_csv(filename_out)
     #clean and log-transform data
@@ -37,7 +38,5 @@ for fn in sorted(glob.glob(outputPath+'/*.txt')):
     df.to_csv(filename_out)
 
 
-
-
 #add nuclei thresholding?
-#markerList = ['DNA-1','DNA-2','DNA-3','DNA-4','DNA-5','MLC2v','pS6-240','p-Src','c-Jun','CleavedCaspase3','pan14-3-3','pRb','Oct4a','B-actin','B-tubulin','pAKT-S473','pS6-235','p-mTor','NFkB','mTor'] #
+

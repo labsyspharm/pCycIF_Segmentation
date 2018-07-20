@@ -10,7 +10,8 @@ import os
 from copy import deepcopy
 
 
-#Need checks for length based on cycle number, check new col length vs old. 
+#TODO: Need checks for new col length vs old, handle error
+
 def labelBiomarkers(fn,numCycles,markerList=None,bleached=1):
     columnLabels = []
     numMarkers = numCycles*4
@@ -56,7 +57,7 @@ def labelBiomarkers(fn,numCycles,markerList=None,bleached=1):
 
     originalDF = pd.read_table(fn)
     outputDF = deepcopy(originalDF)
-    outputDF.columns = columnLabels #Here. column labels must be wrong. 
+    outputDF.columns = columnLabels 
 #    newFN = fn.split('.')[0]+'.csv'
 #    outputDF.to_csv(newFN)
 
@@ -70,7 +71,7 @@ def normalizePlate(df):
     df = df.replace(0, np.nan)  #Could this have any negative consequences?
     df = df.replace(float('-inf'), np.nan)
     df = df.replace(np.inf, np.nan)
-#    df = df.dropna() #default options should be appropriate
+    df = df.dropna() #default options should be appropriate
 
     #Include optional list of non intesnity columns
     #For now, know which columns exist from typical segmentation output 
