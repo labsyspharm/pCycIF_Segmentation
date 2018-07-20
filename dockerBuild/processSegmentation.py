@@ -7,82 +7,89 @@ import sys
 import numpy as np
 import subprocess
 import os
-from biomarker_labeling import labelBiomarkers
-
-#This gets file names
-#To start want to we write everything with same first three characters (row/col) to one df/file 
-#get from fn.split('/')[-1].split('_')[0]
-
-def setOutput(paramsFN):
-    with open(paramsFN) as paramFile:   #File location is an issue
-        paramLines = paramFile.readlines()
-    for line in paramLines:
-        if 'outputPath' in line and '=' in line:
-            outputLine = line
-    outputFolder = outputLine.split('=')[1].split('%')[0].strip()
-    outputFolder = outputFolder.strip('\'')
-
-    normalizedOutput = outputFolder+'/normalized/'
-    if not os.path.exists(normalizedOutput):
-        os.makedirs(normalizedOutput)
-    print(normalizedOutput)
-
-    folders = [outputFolder,normalizedOutput]    
-
-    return folders
+from copy import deepcopy
 
 
+#TODO: Need checks for new col length vs old, handle error
 
-def normalizePlate(outputFolders,markerList,numCycles):
+def labelBiomarkers(fn,numCycles,markerList=None,bleached=1):
+    columnLabels = []
+    numMarkers = numCycles*4
+    dapiList = []
 
-    outputFolder = outputFolders[0]
-    normalizedOutputFolder = outputFolders[1]
 
-    #Need error catching for if there is glob returns empty list
-    #Output name of folder being checked, ask if correct   
-    for fn in sorted(glob.glob(outputFolder+'/_*.txt')):
-#        df = pd.read_table(fn)
-        df = labelBiomarkers(fn,numCycles,markerList,1)
-        #Normalize data
-        for col in df.columns:
+    #If no list of markers is provided, create generic naming
+    if markerList:
+        #add dapi labels to marker list. May need to handle this being optional 
+        for i in range(0,numCycles):
+            dapiList.append('DNA-%s' % str(i+1))
+        markerList = dapiList+markerList
+        for i in range(0,len(markerList)):
+            columnLabels.append(markerList[i]+'_Nuc')
+            if bleached == 1 and (i+1) % numCycles != 0:   
+                columnLabels.append('Bleached-%s' % markerList[i] + '_Nuc')
+        for i in range(0,len(markerList)):
+            columnLabels.append(markerList[i]+'_Cyto')
+            if bleached == 1 and (i+1) % numCycles != 0:   
+                columnLabels.append('Bleached-%s' % markerList[i] + '_Cyto')
 
-            #Include optional list of non intesnity columns
-            #Will save them in separate df, exclude from normalization, add back in later.
-            #May be good to automate searching for this type of column, but for now can feed a list.
-            nonIntCols = ['NucleusArea','CytoplasmArea','CellPosition_X','CellPosition_Y']
-            optDF = pd.DataFrame() 
-            if col in nonIntCols:
-                optDF[col] = df[col]
-            else:
-                df[col] = df[col].apply(np.log2)
 
-        df = df.replace('', np.nan)
-        df = df.replace(0, np.nan)  #Could this have any negative consequences?
-        df = df.replace(float('-inf'), np.nan)
-        df = df.replace(np.inf, np.nan)
-        df = df.dropna() #default options should be appropriate
+    #If list is provided, use for labeling
+    else:
+        channelList = ['DAPI','FITC','Cy3','Cy5']
+        for i in range(1,numCycles+1):
+#            for j in range(0,numCycles):
+#                dapiList.append('DNA-%s' % str(j+1) + '_Nuc')
+            for channel in channelList:
+                label ='%s-%s' % (channel,i)
+                columnLabels.append(label + '_Nuc')
+        for i in range(1,numCycles+1):
+#            for j in range(0,numCycles):
+#                dapiList.append('DNA-%s' % str(j+1) + '_Cyto')
+            for channel in channelList:
+                label ='%s-%s' % (channel,i)
+                columnLabels.append(label + '_Cyto')
+    #missing and bleach 
 
-        #output normalized data:
-        #If normalized file for well, open and append, otherwise new 
-        well = fn.split('/')[-1].split('_')[0]
-        #for fn2 in sorted(glob.glob(normalizedOutputFolder)):
-            #if well in fn2:
-            #    wellData=pd.read_table(fn)
-            #    wellData.concat(df)
-            #    wellData.to_csv(fn2)
-            #else:
-        filename = fn
-        filename_out = normalizedOutputFolder + 'normalized' + filename.split('/')[-1]
-        print(filename_out)
-        df.to_csv(filename_out)
+    #For now hard code, may want to read these from original file, or get input from user
+    extraColumns = ['NucleusArea','CytoplasmArea','CellPosition_X','CellPosition_Y']
+    columnLabels = columnLabels + extraColumns
+
+    originalDF = pd.read_table(fn)
+    outputDF = deepcopy(originalDF)
+    outputDF.columns = columnLabels 
+#    newFN = fn.split('.')[0]+'.csv'
+#    outputDF.to_csv(newFN)
+
+    return outputDF
+
+
+
+def normalizePlate(df):
+    #Eventually include histogram stretching
+    df = df.replace('', np.nan)
+    df = df.replace(0, np.nan)  #Could this have any negative consequences?
+    df = df.replace(float('-inf'), np.nan)
+    df = df.replace(np.inf, np.nan)
+    df = df.dropna() #default options should be appropriate
+
+    #Include optional list of non intesnity columns
+    #For now, know which columns exist from typical segmentation output 
+    nonIntCols = ['NucleusArea','CytoplasmArea','CellPosition_X','CellPosition_Y']
+#    optDF = pd.DataFrame() 
+    for col in df.columns:
+        if col not in nonIntCols:
+            df[col] = df[col].apply(np.log2)
+
+
+
+#    pd.concat([df,optDF], axis=1)
+    #optionally save at each step?:
+#        filename_out = normalizedOutputFolder + 'normalized' + filename.split('/')[-1]
+#        df.to_csv(filename_out)
 
     return df
 
-#markerList = ['Rb-MAVS','LAMP2','M-IRF3','p-TBK1','NFAT-C1','NFkB','TMEM137','IRF5','COX4','STAT6','IRF7','IRF1','STAT5b','LC3A/B','STAT5a','Stat3','PKM2','p-mTOR']#,'p-p38 MAPK1','Stat1','p-Stat6']
-##Is this right order for labeling below?
-##Cycle 1: green (FITC?) - yellow (Cy3?) - red (Cy5?), Cycle 2 green - yellow - red, etc, doesn't specify 2o ab. 
-#fn = '_B02_fld1_crop_cytoMasked.txt'
-#numCycles=6
 
 #TODO:
 #Histograms stretching
@@ -113,7 +120,25 @@ def normalizePlate(outputFolders,markerList,numCycles):
 #            df['Drug'] = pd.Series([drug]*len(df.index),index = df.index)
 
 
+#multiple output folders for various analyses 
 
+#def setOutput(paramsFN):
+#    with open('externalParams.txt') as paramFile:   #File location is an issue
+#        paramLines = paramFile.readlines()
+#    for line in paramLines:
+#        if 'outputPath' in line and '=' in line:
+#            outputLine = line
+#    outputFolder = outputLine.split('=')[1].split('%')[0].strip()
+#    outputFolder = outputFolder.strip('\'')
+
+#    normalizedOutput = outputFolder+'/normalized/'
+#    if not os.path.exists(normalizedOutput):
+#        os.makedirs(normalizedOutput)
+#    print(normalizedOutput)
+
+#    folders = [outputFolder,normalizedOutput]    
+
+#    return folders
 
 
 

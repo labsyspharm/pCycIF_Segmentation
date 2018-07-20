@@ -1,6 +1,10 @@
 inputPath: '/mnt/input'
 outputPath: '/mnt/output'
-numCycles: 4
+numCycles: 11
 row: 'BCD'
 col: [2,3,4]
 SaveFig: 1
+markerList: ['MLC2v','pS6-240','p-Src','c-Jun','CleavedCaspase3','pan14-3-3','pRb','Oct4a','B-actin','B-tubulin','pAKT-S473','pS6-235','p-mTor','NFkB','mTor','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src'] 
+bleachImaged: 0
+
+

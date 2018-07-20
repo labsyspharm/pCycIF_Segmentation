@@ -1,6 +1,6 @@
 
 docker build -t rps21/cycif_segmentation .
-docker run rps21/cycif_segmentation
+
 docker run -it --entrypoint /bin/bash rps21/cycif_segmentation
 docker run -v /home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/insets_TxB/:/mnt/input -v /home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/segmentationOutput/:/mnt/output rps21/cycif_segmentation 
 
@@ -10,5 +10,7 @@ docker rm $(docker ps -a -q)
 docker rmi $(docker images -a -q)
 
 
+matlab -nodisplay -r "/path/to/functionname(argument1, argument2, argumentN);exit"
+matlab -nodisplay -r "cd('/path/to'); functionname(argument1, argument2, argumentN);exit"
 
-
+/home/bobby/Matlab/bin/matlab -nodisplay -r "mcc('-mv','runSegmentation.m');exit"
