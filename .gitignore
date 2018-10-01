@@ -26,3 +26,4 @@ dockerBuild/ashlarExamples
 *runSegmentationO2
 compilationFiles/
 dockerBuild/runSegmentation
+dockerBuild/runSegmentation_Caitlin
