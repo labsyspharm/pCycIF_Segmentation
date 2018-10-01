@@ -13,7 +13,7 @@ from processSegmentation import normalizePlate
 
 
 
-subprocess.call(['./run_runSegmentation.sh','/opt/mcr/v94/','config.yaml'])
+subprocess.call(['./run_runSegmentation_Caitlin.sh','/opt/mcr/v94/','config.yaml'])
 
 with open('config.yaml') as stream:
     options = yaml.load(stream)
