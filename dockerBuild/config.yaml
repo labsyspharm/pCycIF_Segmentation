@@ -1,18 +1,10 @@
-parentPath: '/mnt/input'
+inputPath: '/mnt/input'
 outputPath: '/mnt/output'
-modelPath: '/mnt/input/matlabDependencies_Caitlin'
-modelCatPath: '/mnt/input/matlabDependencies_Caitlin'
-FFCPath: '/mnt/input/matlabDependencies_Caitlin'
-numCycles: 4
+numCycles: 11
 row: 'BCD'
 col: [2,3,4]
-saveFig: 1
-cytoMethod: 'RF'
-MedianIntensity: 1
-saveMasks: 1
-applyFFC: 'ffonly'
-useRFNuc: 1
-segmentCytoplasm: 'segmentCytoplasm'
+SaveFig: 1
 markerList: ['MLC2v','pS6-240','p-Src','c-Jun','CleavedCaspase3','pan14-3-3','pRb','Oct4a','B-actin','B-tubulin','pAKT-S473','pS6-235','p-mTor','NFkB','mTor','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src'] 
 bleachImaged: 0
+
 
