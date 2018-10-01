@@ -1,4 +1,5 @@
-function CaitlinpCycifNucCytoSegmentationCPU(parentPath,modelPath,modelCatPath,FFCPath,varargin)
+function CaitlinpCycifNucCytoSegmentationCPU(parametersFile)
+% function CaitlinpCycifNucCytoSegmentationCPU(parentPath,modelPath,modelCatPath,FFCPath,varargin)
 %this function requires input of nuclei stack range. It assumes that every
 %stack beyond that to the end is a cytoplasmic stain. Marker controlled
 %watershed based on distance transform of nuclei channel is employed to
@@ -18,21 +19,44 @@ function CaitlinpCycifNucCytoSegmentationCPU(parentPath,modelPath,modelCatPath,F
 
 
 
-ip = inputParser;
-ip.addParamValue('NucMaskChan',[4 4],@(x)(numel(x) == 2 & all(x > 0 )));  
-ip.addParamValue('CytoMaskChan',[22 22],@(x)(numel(x) == 2 & all(x > 0 )));  
-ip.addParamValue('Row',['A' 'H'],@(x)(numel(x) == 2 & ischar(x)));  
-ip.addParamValue('Col',[1 12],@(x)(numel(x) == 2 & all(x > 0 ))); 
-ip.addParamValue('cytoMethod','RF',@(x)(ismember(x,{'RF','distanceTransform','ring'})));
-ip.addParamValue('MedianIntensity',true,@islogical);
-ip.addParamValue('saveFig',true,@islogical);
-ip.addParamValue('saveMasks',true,@islogical);
-ip.addParamValue('applyFFC','ffonly',@(x)(ismember(x,{'both','ffonly','none'})));
-ip.addParamValue('useRFNuc',true,@islogical);
-ip.addParamValue('segmentCytoplasm','segmentCytoplasm',@(x)(ismember(x,{'segmentCytoplasm','loadMask','ignoreCytoplasm'})));
-ip.parse(varargin{:});          
-p = ip.Results;  
+% ip = inputParser;
+% ip.addParamValue('NucMaskChan',[4 4],@(x)(numel(x) == 2 & all(x > 0 )));  
+% ip.addParamValue('CytoMaskChan',[22 22],@(x)(numel(x) == 2 & all(x > 0 )));  
+% ip.addParamValue('Row',['A' 'H'],@(x)(numel(x) == 2 & ischar(x)));  
+% ip.addParamValue('Col',[1 12],@(x)(numel(x) == 2 & all(x > 0 ))); 
+% ip.addParamValue('cytoMethod','RF',@(x)(ismember(x,{'RF','distanceTransform','ring'})));
+% ip.addParamValue('MedianIntensity',true,@islogical);
+% ip.addParamValue('saveFig',true,@islogical);
+% ip.addParamValue('saveMasks',true,@islogical);
+% ip.addParamValue('applyFFC','ffonly',@(x)(ismember(x,{'both','ffonly','none'})));
+% ip.addParamValue('useRFNuc',true,@islogical);
+% ip.addParamValue('segmentCytoplasm','segmentCytoplasm',@(x)(ismember(x,{'segmentCytoplasm','loadMask','ignoreCytoplasm'})));
+% ip.parse(varargin{:});          
+% p = ip.Results;  
 
+javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/bobbySegmentCardioMyo/bfmatlab/bioformats_package.jar')
+
+[params] = YAML.read(parametersFile);
+parentPath = params.inputPath;
+% outputPath = params.outputPath;
+modelPath = params.modelPath;   %.mat, static
+modelCatPath = params.modelCatPath; %.mat, static
+FFCPath = params.FFCPath;   %Tif, static
+% javaPath = params.javaPath;
+numCycles = params.numCycles;
+Row = params.row;
+Col = params.col;
+saveFig = params.saveFig;
+cytoMethod = params.cytoMethod;
+MedianIntensity = params.MedianIntensity;
+saveMasks = params.saveMasks;
+applyFFC = params.applyFFC;
+useRFNuc = params.useRFNuc;
+segmentCytoplasm = params.segmentCytoplasm;
+
+%Set NucMaskChan from numCycles = 5;
+NucMaskChan = 2:numCycles;
+% javaaddpath(javaPath)
 
 
 %% initialization
@@ -41,7 +65,7 @@ drive='Y';
 folders=dir([parentPath filesep '*Plate*']);
 
 % FFCPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\MCF10 Common\Real experiment\All Cyles\FFC'];
-switch p.applyFFC
+switch applyFFC
     case 'both'
         dfp = volumeRead([FFCPath filesep 'allDF.tif']);         
         ffp = volumeRead([FFCPath filesep 'allFFP.tif']);
@@ -66,8 +90,8 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
     end
     analysisPath = [testPath filesep 'analysis'];
     
-    row = p.Row(1):p.Row(2);
-    col = p.Col(1):p.Col(2);
+    row = Row(1):Row(2);
+    col = Col(1):Col(2);
     
         for iRow = 1:numel(row)
             for iCol = 1:numel(col)
@@ -81,7 +105,7 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
 
                         I = volumeRead([testPath filesep fileName]);
                         nucleiStack = [1 size(I,3)/4];
-                        nucleiMaskChan = p.NucMaskChan;
+                        nucleiMaskChan = NucMaskChan;
                         cytoChanRange = (size(I,3)-nucleiStack(2));
                         cytoChanStart =size(I,3)/4+1;
                         cytoChanEnd = size(I,3);
@@ -91,7 +115,7 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                         nucleiImage = double(nucleiImage);
                         nucleiImage = nucleiImage/65535;%max(nucleiImage(:));
 
-                        if (p.useRFNuc)
+                        if (useRFNuc)
                         %% apply random forest model to generate classProbs
                             F = pcImageFeatures(imresize(nucleiImage,0.5,'nearest'),model.sigmas,model.offsets,model.osSigma,model.radii,...
                                 model.cfSigma,model.logSigmas,model.sfSigmas,model.ridgeSigmas,model.ridgenangs,...
@@ -176,10 +200,10 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                         end
                         
                         %% cytoplasm segmentation
-                        switch p.segmentCytoplasm
+                        switch segmentCytoplasm
                             case 'segmentCytoplasm'
-                                cyto = max(I(:,:,p.CytoMaskChan(1):p.CytoMaskChan(2)),[],3);
-                                switch p.cytoMethod
+                                cyto = max(I(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3);
+                                switch cytoMethod
                                     case 'RF'
                                   F = pcImageFeatures(imresize(double(cyto)/65335,0.5,'bilinear'),modelCat.sigmas,modelCat.offsets,...
                                       modelCat.osSigma,modelCat.radii,modelCat.cfSigma,modelCat.logSigmas,modelCat.sfSigmas,...
@@ -242,7 +266,7 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                         end
 %                         imshowLinkedTuple(cellMask==0,imresize(sqrt(normalize(cyto)),2))
                         %% apply flatfield correction using flatfield & darkfield, just flatfield, or no correction 
-                        switch p.applyFFC
+                        switch applyFFC
                         
                             case 'both'
                                 for iffp = 1:4
@@ -278,7 +302,7 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                             nucleiStats=regionprops(nucleiMask,cytoResized(:,:,iChan),'MeanIntensity','Centroid','Area','PixelIdxList');
                             cytoStats=regionprops(cytoplasmMask,cytoResized(:,:,iChan),'MeanIntensity','Centroid','Area','PixelIdxList');
 
-                            if p.MedianIntensity ==1
+                            if MedianIntensity ==1
                                 cytoSlice=cytoResized(:,:,iChan);
                                 for iCell = 1: numel(nucleiStats)
                                     medianIntNucTable(iCell,iChan) = median(cytoSlice(nucleiStats(iCell).PixelIdxList));
@@ -315,7 +339,7 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                         end
 
                         %% display
-                        if p.saveFig==true
+                        if saveFig==true
 
                             % save mask overlay to .fig
                             figure,
@@ -328,7 +352,7 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                                 text (nucleiStats(i).Centroid(1),nucleiStats(i).Centroid(2),int2str(i),'Color' ,'r')
                             end
 
-                            axs = [axs subplot(1,2,2)];imshow(sqrt(max(cytoResized(:,:,p.CytoMaskChan(1):p.CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,p.CytoMaskChan(1):p.CytoMaskChan(2)))))))
+                            axs = [axs subplot(1,2,2)];imshow(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)))))))
                             hold on
                             visboundaries(bwboundaries(cytoplasmMask),'LineWidth',1)
 
@@ -351,12 +375,12 @@ load ([modelCatPath filesep 'modelCatManual.mat'])
                             tiffwriteimj(uint8(allChan), [analysisPath filesep name '_Masked' ext])
                             
                             %save FFC upsampled image
-                            if  strcmp(p.applyFFC,'ffonly') ||  strcmp(p.applyFFC,'both')
+                            if  strcmp(applyFFC,'ffonly') ||  strcmp(applyFFC,'both')
                                tiffwriteimj(uint16(imresize(cytoResized,[size(nucleiMask,1) size(nucleiMask,2)])), [analysisPath filesep name '_FFC' ext])
                             end
                             
                             %save nuclear and cytoplasm masks
-                            if p.saveMasks
+                            if saveMasks
                                 tiffwriteimj(uint16(nucleiMask), [analysisPath filesep name '_nucleiLM' ext])
                                 tiffwriteimj(uint16(cytoplasmMask), [analysisPath filesep name '_cytoLM' ext])
                             end
