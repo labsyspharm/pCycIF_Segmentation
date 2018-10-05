@@ -34,11 +34,20 @@ function [] = runSegmentation_Caitlin(parametersFile)
 % ip.parse(varargin{:});
 % p = ip.Results;
 
-% javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/segmentationCode/matlabDependencies_Caitlin/bfmatlab/bioformats_package.jar')
+javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/segmentationCode/matlabDependencies_Caitlin/bfmatlab/bioformats_package.jar')
+javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/segmentationCode/matlabDependencies_Caitlin/yaml/java/snakeyaml-1.9.jar')
+
+
+javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/dockerBuild/matlabDependencies_Caitlin/bfmatlab/bioformats_package.jar')
+javaaddpath('/home/bobby/Dropbox/MATLAB/cardiotoxCycif/segmentation/pCycIF_Segmentation/dockerBuild/matlabDependencies_Caitlin/yaml/java/snakeyaml-1.9.jar')
+
 javaaddpath('matlabDependencies_Caitlin/bfmatlab/bioformats_package.jar')
 javaaddpath('matlabDependencies_Caitlin/yaml/java/snakeyaml-1.9.jar')
 
 [params] = YAML.read(parametersFile);
+NucMaskChan = str2num(params.NucMaskChan{1});
+CytoMaskChan = str2num(params.CytoMaskChan{1});
+
 parentPath = params.parentPath;
 analysisPath = params.outputPath;
 modelPath = params.modelPath;   %.mat, static
