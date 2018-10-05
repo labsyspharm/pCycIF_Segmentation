@@ -20,13 +20,7 @@ else
 
     scsubsets = cell(1,nSubsets);
     imsubsets = cell(1,nSubsets);
-%     parfor i = 1:nSubsets
-%         [~,scores] = predict(treeBag,ftsubsets{i});
-%         [~,indOfMax] = max(scores,[],2);
-%         scsubsets{i} = scores;
-%         imsubsets{i} = indOfMax;
-%     end
-    for i = 1:nSubsets
+    parfor i = 1:nSubsets
         [~,scores] = predict(treeBag,ftsubsets{i});
         [~,indOfMax] = max(scores,[],2);
         scsubsets{i} = scores;
