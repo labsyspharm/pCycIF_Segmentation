@@ -28,7 +28,7 @@ if not os.path.exists(newFolder):
 
 for fn in sorted(glob.glob(outputPath+'/*.txt')):
     #fill biomarkers
-    df = labelBiomarkers(fn,numCycles,markerList,bleached)
+    #df = labelBiomarkers(fn,numCycles,markerList,bleached)
     filename_out = newFolder + 'name' + fn.split('/')[-1]
     df.to_csv(filename_out)
     #clean and log-transform data
