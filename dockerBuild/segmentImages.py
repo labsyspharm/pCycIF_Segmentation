@@ -13,9 +13,9 @@ from processSegmentation import normalizePlate
 
 
 
-subprocess.call(['./run_runSegmentation_Caitlin.sh','/opt/mcr/v94/','config.yaml'])
+subprocess.call(['./run_runSegmentation_Caitlin.sh','/opt/mcr/v94/','/config/cycif_segmentation.yml'])
 
-with open('config.yaml') as stream:
+with open('/config/cycif_segmentation.yml') as stream:
     options = yaml.load(stream)
 outputPath = options['outputPath']
 numCycles = options['numCycles']

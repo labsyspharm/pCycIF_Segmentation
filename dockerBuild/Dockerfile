@@ -31,23 +31,25 @@ ENV LD_LIBRARY_PATH /opt/mcr/v94/runtime/glnxa64:/opt/mcr/v94/bin/glnxa64:/opt/m
 ENV XAPPLRESDIR /opt/mcr/v94/X11/app-default
 
 
-
 RUN pip3 install -q -U \
     pip \
     numpy \
     PyYAML \
     pandas 
 
-# Set the working directory to /app
-# Is this what should be the input directory?
-# . should have necessary matlab and python code
-VOLUME /mnt/input
-VOLUME /mnt/output
-VOLUME /data
-WORKDIR /data
-#
-ADD . /data
+# Build input, output, config, and segmentation directories
+# Add necessary matlab and python code to /segmentation
+VOLUME /input
+VOLUME /output
 
+VOLUME /segmentation
+WORKDIR /segmentation
+
+ADD matlabDependencies_Caitlin /segmentation/matlabDependencies_Caitlin
+ADD processSegmentation.py /segmentation/processSegmentation.py
+ADD segmentImages.py /segmentation/segmentImages.py
+ADD run_runSegmentation.sh /segmentation/run_runSegmentation.sh
+ADD runSegmentation_Caitlin /segmentation/runSegmentation_Caitlin
 
 
 # Run app.py when the container launches

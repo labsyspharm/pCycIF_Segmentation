@@ -1,10 +1,10 @@
 NucMaskChan: [2 2]
 CytoMaskChan: [4 4]
-parentPath: '/mnt/input'
-outputPath: '/mnt/output'
-modelPath: '/mnt/input/matlabDependencies_Caitlin'
-modelCatPath: '/mnt/input/matlabDependencies_Caitlin'
-FFCPath: '/mnt/input/matlabDependencies_Caitlin'
+parentPath: '/input'
+outputPath: '/output'
+modelPath: '/input/matlabDependencies_Caitlin'
+modelCatPath: '/input/matlabDependencies_Caitlin'
+FFCPath: '/input/matlabDependencies_Caitlin'
 numCycles: 4
 row: 'BCD'
 col: [2,3,4]
