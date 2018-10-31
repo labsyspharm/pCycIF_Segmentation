@@ -45,11 +45,11 @@ VOLUME /output
 VOLUME /segmentation
 WORKDIR /segmentation
 
-ADD matlabDependencies_Caitlin /segmentation/matlabDependencies_Caitlin
+ADD matlabDependencies /segmentation/matlabDependencies
 ADD processSegmentation.py /segmentation/processSegmentation.py
 ADD segmentImages.py /segmentation/segmentImages.py
 ADD run_runSegmentation.sh /segmentation/run_runSegmentation.sh
-ADD runSegmentation_Caitlin /segmentation/runSegmentation_Caitlin
+ADD runSegmentation /segmentation/runSegmentation
 
 
 # Run app.py when the container launches
