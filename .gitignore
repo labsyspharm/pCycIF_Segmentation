@@ -22,8 +22,8 @@ dockerBuild/ashlarExamples
 
 #Compiled files
 *.sh
-*runSegmentation
+#runSegmentation
 *runSegmentationO2
-compilationFiles/
-dockerBuild/runSegmentation
-dockerBuild/runSegmentation_Caitlin
+#compilationFiles/
+#dockerBuild/runSegmentation
+#dockerBuild/runSegmentation_Caitlin
