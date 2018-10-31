@@ -48,8 +48,10 @@ switch applyFFC
 end
 
 % modelPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\MCF10 Common\20x full exp\nucleiTrainingSet\halfsize'];
+%pragma necessary for Matlab compiler to recognize treeBagger class when
+%loading from .mat file
+%#function treeBagger
 load ([modelPath filesep 'model.mat'])
-
 % modelCatPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\MCF10 Common\20x full exp\cateninTrainingSet'];
 load ([modelCatPath filesep 'modelCatManual.mat'])
 
@@ -94,8 +96,6 @@ for iFolder = 1:numel(folders)
                             model.cfSigma,model.logSigmas,model.sfSigmas,model.ridgeSigmas,model.ridgenangs,...
                             model.edgeSigmas,model.edgenangs,model.nhoodEntropy,model.nhoodStd);
                         [imL,classProbs] = imClassify(F,model.treeBag,100);
-%                         %TEMPORARY change to run only in serial for testing
-%                         [imL,classProbs] = imClassify(F,model.treeBag,1);
                         nucleiClass=classProbs(:,:,3);
                         
                         %% markers based on log filter on classProbs 3
@@ -185,9 +185,6 @@ for iFolder = 1:numel(folders)
                                         modelCat.ridgeSigmas,modelCat.ridgenangs,modelCat.edgeSigmas,modelCat.edgenangs,modelCat.nhoodEntropy,...
                                         modelCat.nhoodStd);
                                     [imL,catClassProbs] = imClassify(F,modelCat.treeBag,100);
-%                                     %TEMPORARY change to run only in serial for
-%                                     %testing
-%                                     [imL,classProbs] = imClassify(F,model.treeBag,1);
                                     contours = imresize(catClassProbs(:,:,2),2);
                                     %                             bgm = classProbs(:,:,1)>0.9;
                                     %                             bgm = imresize(bwmorph(bgm,'shrink',Inf),4);
