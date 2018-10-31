@@ -21,7 +21,7 @@ pRb_NC_testing/
 dockerBuild/ashlarExamples
 
 #Compiled files
-*.sh
+#*.sh
 #runSegmentation
 *runSegmentationO2
 #compilationFiles/
