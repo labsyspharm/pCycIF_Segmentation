@@ -4,14 +4,12 @@ FROM ubuntu
 
 RUN apt-get update &&\
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    build-essential \
     openjdk-8-jdk-headless \
     libasound2-dev \
     nano \
     unzip \
     xorg \
     wget \
-    curl \
     libxt6 \
     python3-dev \
     python3-pip && \
@@ -37,24 +35,29 @@ RUN pip3 install -q -U \
     PyYAML \
     pandas 
 
+
+RUN mkdir /segmentation && \
+    cd /segmentation && \
+    wget https://github.com/sorgerlab/pCycIF_Segmentation/raw/master/dockerBuild/runSegmentation &&\
+    chmod +x runSegmentation
+
 # Build input, output, config, and segmentation directories
 # Add necessary matlab and python code to /segmentation
 VOLUME /input
 VOLUME /output
-
-VOLUME /segmentation
+VOLUME /config
 WORKDIR /segmentation
 
 ADD matlabDependencies /segmentation/matlabDependencies
 ADD processSegmentation.py /segmentation/processSegmentation.py
 ADD segmentImages.py /segmentation/segmentImages.py
 ADD run_runSegmentation.sh /segmentation/run_runSegmentation.sh
-ADD runSegmentation /segmentation/runSegmentation
+#ADD runSegmentation /segmentation/runSegmentation
 
 
-# Run app.py when the container launches
+
+# Run segmentation when the container launches
 CMD ["python3", "segmentImages.py"]
-
 
 
 
