@@ -1,6 +1,0 @@
-inputPath = '/n/scratch2/rps21/ResegmentedPlates/ProcessedDataP1'
-outputPath = '/home/rps21/pCycIF_Segmentation/outputcardiomyocyte'
-numCycles = 6 %Is this basically number of cycles? 2:cycle num
-row = ['B':'G']
-col = [2:11]
-SaveFig = 1
