@@ -71,7 +71,7 @@ for iFolder = 1:numel(folders)
     for iRow = 1:numel(row)
         for iCol = 1:numel(col)
             for iField = 1:9
-                files = dir([testPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_fld' int2str(iField) '_crop' '.tif']);
+                files = dir([testPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_fld' int2str(iField) '*.tif']);
                 for iFile = 1:numel(files)
                
                     tic
