@@ -11,16 +11,8 @@ javaaddpath('matlabDependencies/yaml/java/snakeyaml-1.9.jar')
 [params] = YAML.read(parametersFile);
 NucMaskChan = str2num(params.NucMaskChan{1});
 CytoMaskChan = str2num(params.CytoMaskChan{1});
-
-parentPath = params.parentPath;
-analysisPath = params.outputPath;
-modelPath = params.modelPath;   %.mat, static
-modelCatPath = params.modelCatPath; %.mat, static
-FFCPath = params.FFCPath;   %Tif, static
-% javaPath = params.javaPath;
-numCycles = params.numCycles;
 Row = params.row;
-Col = params.col;
+Col = params.col{1};
 saveFig = params.saveFig;
 cytoMethod = params.cytoMethod;
 MedianIntensity = params.MedianIntensity;
@@ -29,15 +21,22 @@ applyFFC = params.applyFFC;
 useRFNuc = params.useRFNuc;
 segmentCytoplasm = params.segmentCytoplasm;
 
-%Set NucMaskChan from numCycles = 5;
-NucMaskChan = 2:numCycles;
+%Paths that should not change
+parentPath = '/input';  %docker input folder, mapped by user
+analysisPath = '/output';   %docker output folder, mapped by user
+modelPath = '/segmentation/matlabDependencies';   %.mat, static
+modelCatPath = '/segmentation/matlabDependencies'; %.mat, static
+FFCPath = '/segmentation/matlabDependencies';   %Tif, static
+
 
 %% initialization
-drive='Y';
-% parentPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\Fixed MCF10 Common\20x full exp\20180905_Updated'];
 folders=dir([parentPath filesep '*Plate*']);
+if isempty(folders)
+    error('No usable folders found of in input folder.\n Folders must be names Plate1, Plate2, etc')
+end
 
-% FFCPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\MCF10 Common\Real experiment\All Cyles\FFC'];
+
+
 switch applyFFC
     case 'both'
         dfp = volumeRead([FFCPath filesep 'allDF.tif']);
@@ -47,14 +46,10 @@ switch applyFFC
     case 'none'
 end
 
-% modelPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\MCF10 Common\20x full exp\nucleiTrainingSet\halfsize'];
-%pragma necessary for Matlab compiler to recognize treeBagger class when
-%loading from .mat file
+%pragma necessary for Matlab compiler to recognize treeBagger class when loading from .mat file
 %#function treeBagger
-load ([modelPath filesep 'model.mat'])
-% modelCatPath = [drive ':\sorger\data\IN Cell Analyzer 6000\Connor\MCF10 Common\20x full exp\cateninTrainingSet'];
-load ([modelCatPath filesep 'modelCatManual.mat'])
-
+load([modelPath filesep 'model.mat'])
+load([modelCatPath filesep 'modelCatManual.mat'])
 
 %%
 for iFolder = 1:numel(folders)
@@ -64,7 +59,6 @@ for iFolder = 1:numel(folders)
         mkdir([testPath filesep 'analysis'])
         
     end
-    %     analysisPath = [testPath filesep 'analysis'];
     
     row = Row(1):Row(2);
     col = Col(1):Col(2);
@@ -72,6 +66,10 @@ for iFolder = 1:numel(folders)
         for iCol = 1:numel(col)
             for iField = 1:9
                 files = dir([testPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_fld' int2str(iField) '*.tif']);
+                if isempty(files)
+                    failedPath = [testPath filesep  row(iRow) sprintf('%.2d', col(iCol)) '_fld' int2str(iField) '*.tif'];
+                    warning(['No files found with path ' failedPath])
+                end
                 for iFile = 1:numel(files)
                
                     tic
@@ -88,7 +86,7 @@ for iFolder = 1:numel(folders)
                     nucleiImage = I(:,:,nucleiMaskChan(1):nucleiMaskChan(2));
                     nucleiImage = max(nucleiImage,[],3);
                     nucleiImage = double(nucleiImage);
-                    nucleiImage = nucleiImage/65535;%max(nucleiImage(:));
+                    nucleiImage = nucleiImage/65535; %max(nucleiImage(:));
                     
                     if (useRFNuc)
                         %% apply random forest model to generate classProbs
