@@ -35,12 +35,6 @@ RUN pip3 install -q -U \
     PyYAML \
     pandas 
 
-
-RUN mkdir /segmentation && \
-    cd /segmentation && \
-    wget https://github.com/sorgerlab/pCycIF_Segmentation/raw/master/dockerBuild/runSegmentation &&\
-    chmod +x runSegmentation
-
 # Build input, output, config, and segmentation directories
 # Add necessary matlab and python code to /segmentation
 VOLUME /input
@@ -48,16 +42,17 @@ VOLUME /output
 VOLUME /config
 WORKDIR /segmentation
 
+#Add compiled file from git LFS
+ADD https://github.com/sorgerlab/pCycIF_Segmentation/raw/master/dockerBuild/runSegmentation /segmentation/runSegmentation
+RUN chmod +x runSegmentation
+
+#Add rest of segmentation code 
 ADD matlabDependencies /segmentation/matlabDependencies
 ADD processSegmentation.py /segmentation/processSegmentation.py
 ADD segmentImages.py /segmentation/segmentImages.py
 ADD run_runSegmentation.sh /segmentation/run_runSegmentation.sh
-#ADD runSegmentation /segmentation/runSegmentation
-
-
 
 # Run segmentation when the container launches
 CMD ["python3", "segmentImages.py"]
-
 
 
