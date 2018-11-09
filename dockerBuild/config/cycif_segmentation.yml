@@ -1,13 +1,8 @@
-NucMaskChan: [2 2]
-CytoMaskChan: [4 4]
-parentPath: '/input'
-outputPath: '/output'
-modelPath: '/segmentation/matlabDependencies'
-modelCatPath: '/segmentation/matlabDependencies'
-FFCPath: '/segmentation/matlabDependencies'
-numCycles: 4
-row: 'BCD'
-col: [2,3,4]
+NucMaskChan: [1 9]
+CytoMaskChan: [10 36]
+numCycles: 9
+row: 'CDE'
+col: [4 10]
 saveFig: 1
 cytoMethod: 'RF'
 MedianIntensity: 1
