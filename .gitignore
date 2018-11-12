@@ -8,7 +8,6 @@ readme.txt
 mccExcludedFiles.log
 
 #Output data
-output/
 processingAndVisualization/testOutput/
 segmentationOutput/
 
