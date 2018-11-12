@@ -17,7 +17,7 @@ subprocess.call(['/segmentation/run_runSegmentation.sh','/opt/mcr/v94/','/config
 
 with open('/config/cycif_segmentation.yml') as stream:
     options = yaml.load(stream)
-outputPath = options['outputPath']
+outputPath = '/output'
 numCycles = options['numCycles']
 markerList = options['markerList']
 bleached = options['bleachImaged']
@@ -37,6 +37,4 @@ if not os.path.exists(newFolder):
 #    filename_out = newFolder + 'norm' + fn.split('/')[-1]
 #    df.to_csv(filename_out)
 
-
-#add nuclei thresholding?
 
