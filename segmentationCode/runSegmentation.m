@@ -12,7 +12,7 @@ javaaddpath('matlabDependencies/yaml/java/snakeyaml-1.9.jar')
 NucMaskChan = str2num(params.NucMaskChan{1});
 CytoMaskChan = str2num(params.CytoMaskChan{1});
 Row = params.row;
-Col = params.col{1};
+Col = str2num(params.col{1});
 saveFig = params.saveFig;
 cytoMethod = params.cytoMethod;
 MedianIntensity = params.MedianIntensity;
@@ -54,14 +54,10 @@ load([modelCatPath filesep 'modelCatManual.mat'])
 %%
 for iFolder = 1:numel(folders)
     testPath = [parentPath filesep folders(iFolder).name];
-   
-    if exist([testPath filesep 'analysis'],'dir')~=7
-        mkdir([testPath filesep 'analysis'])
-        
-    end
     
     row = Row(1):Row(2);
     col = Col(1):Col(2);
+    
     for iRow = 1:numel(row)
         for iCol = 1:numel(col)
             for iField = 1:9
@@ -71,7 +67,6 @@ for iFolder = 1:numel(folders)
                     warning(['No files found with path ' failedPath])
                 end
                 for iFile = 1:numel(files)
-               
                     tic
                     fileName = files(iFile).name;
                     [~,name,ext] = fileparts(fileName) ;
@@ -80,7 +75,7 @@ for iFolder = 1:numel(folders)
                     nucleiStack = [1 size(I,3)/4];
                     nucleiMaskChan = NucMaskChan;
                     cytoChanRange = (size(I,3)-nucleiStack(2));
-                    cytoChanStart =size(I,3)/4+1;
+                    cytoChanStart = size(I,3)/4+1;
                     cytoChanEnd = size(I,3);
                     
                     nucleiImage = I(:,:,nucleiMaskChan(1):nucleiMaskChan(2));
