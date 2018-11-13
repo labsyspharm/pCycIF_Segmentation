@@ -1,6 +1,7 @@
 # Dockerized app for segmentation of plate-based Cyclic Immunofluorescence (pCycIF) imaging data
 
 #Segmentation Methodology
+Add description
 
 ## Installation
 Download the docker image by `docker pull rps21/pcycif_segmentation`
@@ -61,12 +62,4 @@ useRFNuc: Boolean value (0/1) determining if you want to use... ?
 Example: 1
 segmentCytoplasm: 'segmentCytoplasm'
 bleached: 0
-
-C04_fld7_cytoLM.tif
-C04_fld7_cytoMasked.fig
-C04_fld7_FFC.tif
-C04_fld7_Masked.tif
-C04_fld7_nucleiLM.tif
-C04_fld7_RAW.tif
-_C04_fld7_cytoMasked.txt
 

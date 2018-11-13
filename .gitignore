@@ -8,7 +8,7 @@
 dockerBuild/pointsToAddress.txt
 dockerBuild/internalNotes.txt
 dockerBuild/example_dockerfile
-dockerBuild/README_inProgresss.md
+dockerBuild/README_addSource.md
 
 #MCR files:
 requiredMCRProducts.txt
