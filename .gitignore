@@ -1,6 +1,14 @@
 #Temp files 
 *~
 .~*
+*.swp
+*.Rhistory
+
+#Internal notes
+dockerBuild/pointsToAddress.txt
+dockerBuild/internalNotes.txt
+dockerBuild/example_dockerfile
+dockerBuild/README_inProgresss.md
 
 #MCR files:
 requiredMCRProducts.txt
@@ -10,6 +18,8 @@ mccExcludedFiles.log
 #Output data
 processingAndVisualization/testOutput/
 segmentationOutput/
+dockerBuild/output/*RAW*
+dockerBuild/output/*.fig
 
 #Input data
 insets_TxB/
