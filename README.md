@@ -1,13 +1,13 @@
 # Dockerized app for segmentation of plate-based Cyclic Immunofluorescence (pCycIF) imaging data
 
-#Segmentation Methodology
+## Segmentation Methodology
 Add description
 
 ## Installation
 Download the docker image by `docker pull rps21/pcycif_segmentation`
 Build the docker image by `docker build -t rps21/pcycif_segmentation .`
 
-##Usage 
+## Usage 
 Create an input folder which contains one folder for each plate that was imaged. Each of these folders must contain the images to be segmented
 Example:
 /localPath/Plate1/image1.tif
@@ -62,4 +62,5 @@ useRFNuc: Boolean value (0/1) determining if you want to use... ?
 Example: 1
 segmentCytoplasm: 'segmentCytoplasm'
 bleached: 0
+
 
