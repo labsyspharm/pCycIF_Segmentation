@@ -9,7 +9,7 @@ import subprocess
 import yaml
 import os
 from processSegmentation import labelBiomarkers
-from processSegmentation import normalizePlate
+
 
 
 
@@ -26,11 +26,15 @@ newFolder = outputPath+'/processedOutput/'
 if not os.path.exists(newFolder):
     os.makedirs(newFolder)
 
-#for fn in sorted(glob.glob(outputPath+'/*.txt')):
-#    #fill biomarkers
-#    #df = labelBiomarkers(fn,numCycles,markerList,bleached)
-#    filename_out = newFolder + 'name' + fn.split('/')[-1]
-#    df.to_csv(filename_out)
+for fn in sorted(glob.glob(outputPath+'/*.txt')):
+    #fill biomarkers
+    df = labelBiomarkers(fn,numCycles,markerList,bleached)
+    filename_out = newFolder + 'name' + fn.split('/')[-1]
+    df.to_csv(filename_out)
+
+
+
+
 #    #clean and log-transform data
 #    df = normalizePlate(df)   #create new output subdirectory?
 #    #Save file
