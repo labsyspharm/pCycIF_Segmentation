@@ -12,10 +12,6 @@ from copy import deepcopy
 
 #TODO: Need checks for new col length vs old, handle error
 
-#Now mean nuc, mean cyto, median nuc, median cyto
-
-#NucleiChannelMeanIntensity1
-
 
 def labelBiomarkers(fn,numCycles,markerList=None,bleached=0):
     columnLabels = []
@@ -45,6 +41,9 @@ def labelBiomarkers(fn,numCycles,markerList=None,bleached=0):
             columnLabels.append(markerList[i]+'_MedianIntensity_Nuc')
             if bleached == 1 and (i+1) % numCycles != 0:   
                 columnLabels.append('Bleached-%s' % markerList[i] + '_MedianIntensity_Nuc')
+
+
+
 
     #If list is provided, use for labeling
     else:
@@ -82,12 +81,15 @@ def labelBiomarkers(fn,numCycles,markerList=None,bleached=0):
     columnLabels = columnLabels + extraColumns
 
 
-    #if len(markerList) != len(df.columnLabels)
-
     originalDF = pd.read_table(fn)
     outputDF = deepcopy(originalDF)
-    outputDF.columns = columnLabels 
-
+#    try:
+#        outputDF.columns = columnLabels 
+#    except ValueError:
+    if len(outputDF.columns) != len(columnLabels):
+        raise ValueError('Incorrect number of markers or cycles given. Expected %s markers, received %s' % (len(outputDF.columns),len(columnLabels)))
+    else:
+        outputDF.columns = columnLabels 
     return outputDF
 
 
@@ -96,7 +98,6 @@ def labelBiomarkers(fn,numCycles,markerList=None,bleached=0):
 
 #TODO:
 #Histograms stretching
-                #Eventually add back in automated histogram stretching
                 #Need automated way to find 'newmax' for each plate 
 #                newmin = min(df[col])
 #                newmax = 15000  #Need to automate finding this value
