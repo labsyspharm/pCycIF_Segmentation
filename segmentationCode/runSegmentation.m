@@ -322,8 +322,8 @@ for iFolder = 1:numel(folders)
                         % save mask overlay to .fig
                         figure,
                         axs=[];
-                        axs = [axs subplot(1,2,1)];  imshow(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1))))))
-%                         axs = [axs subplot(1,2,1)];  imshow(real(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1)))))))
+%                         axs = [axs subplot(1,2,1)];  imshow(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1))))))
+                        axs = [axs subplot(1,2,1)];  imshow(real(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1)))))))
                         hold on
                         visboundaries(bwboundaries(nucleiMask),'LineWidth',1)
                         
@@ -331,8 +331,8 @@ for iFolder = 1:numel(folders)
                             text (nucleiStats(i).Centroid(1),nucleiStats(i).Centroid(2),int2str(i),'Color' ,'r')
                         end
                         
-                        axs = [axs subplot(1,2,2)];imshow(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)))))))
-%                         axs = [axs subplot(1,2,2)];imshow(real(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2))))))))
+%                         axs = [axs subplot(1,2,2)];imshow(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)))))))
+                        axs = [axs subplot(1,2,2)];  imshow(real(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2))))))))
                         hold on
                         visboundaries(bwboundaries(cytoplasmMask),'LineWidth',1)
                         
