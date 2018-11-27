@@ -4,7 +4,7 @@
 Add description
 
 ## Installation
-Download the docker image by `docker pull rps21/pcycif_segmentation`
+Download the docker image using the command `docker pull rps21/pcycif_segmentation`
 Build the docker image by `docker build -t rps21/pcycif_segmentation .`
 
 ## Usage 
@@ -39,6 +39,8 @@ Example output can be found at:/localPath/pCycIF_Segmentation/dockerBuild/output
 The following parameters must be set by the user based on their experimental design. 
 Example configuration file can be found at: /localPath/pCycIF_Segmentation/dockerBuild/config
 
+parallel: Boolean value (0/1) determining if segmentation will be run in parallel
+Example: 0
 NucMaskChan: Matrix with numbered index of first and last image of tiff stack that correspond to nuclear stains
 Example: [1 9]
 CytoMaskChan: Matrix with numbered index of first and last image of tiff stack that correspond to cytoplasmic stains
