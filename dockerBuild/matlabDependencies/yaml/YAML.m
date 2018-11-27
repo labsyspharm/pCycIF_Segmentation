@@ -46,7 +46,7 @@ classdef YAML
         
         function [ X ] = load( S )
             %LOAD load matlab object from yaml string
-            javaaddpath(YAML.JARFILE);
+%             javaaddpath(YAML.JARFILE);
             
             % Load yaml into java obj
             yaml = org.yaml.snakeyaml.Yaml;
@@ -58,7 +58,7 @@ classdef YAML
         
         function [ S ] = dump( X )
             %DUMP serialize matlab object into yaml string
-            javaaddpath(YAML.JARFILE);
+%             javaaddpath(YAML.JARFILE);
             
             % Convert matlab obj to java obj
             yaml = org.yaml.snakeyaml.Yaml();
