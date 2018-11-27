@@ -53,7 +53,7 @@ col: Matrix with numbered index of first and last column  of a 96-well plate to 
 Example: [4 10]
 saveFig: Boolean value (0/1) determining if you want to save Matlab .fig files 
 Example: 1
-cytoMethod: Cytoplasm segmentation method to use. 
+cytoMethod: Cytoplasm segmentation method to use. Options:
 Example: 'RF'
 MedianIntensity: 1
 saveMasks: Boolean value (0/1) determining if you want to save mask images
@@ -63,6 +63,7 @@ Example: 'ffonly'
 useRFNuc: Boolean value (0/1) determining if you want to use... ?
 Example: 1
 segmentCytoplasm: 'segmentCytoplasm'
-bleached: 0
+bleachImaged: Boolean value (0/1) stating if images were taked of bleaching in between each cycle 
+Example: 0
 
 
