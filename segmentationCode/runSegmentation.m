@@ -1,4 +1,4 @@
-function [] = runSegmentation_Caitlin(parametersFile)
+function [] = runSegmentation(parametersFile)
 % function CaitlinpCycifNucCytoSegmentationCPU(parentPath,modelPath,modelCatPath,FFCPath,varargin)
 %this function requires input of nuclei stack range. It assumes that every
 %stack beyond that to the end is a cytoplasmic stain. Marker controlled
@@ -9,6 +9,12 @@ javaaddpath('matlabDependencies/bfmatlab/bioformats_package.jar')
 javaaddpath('matlabDependencies/yaml/java/snakeyaml-1.9.jar')
 
 [params] = YAML.read(parametersFile);
+parallel = params.parallel;
+if parallel == 0
+    nSubsets = 1;
+else
+    nSubsets = 100;
+end
 NucMaskChan = str2num(params.NucMaskChan{1});
 CytoMaskChan = str2num(params.CytoMaskChan{1});
 Row = params.row;
@@ -32,7 +38,7 @@ FFCPath = '/segmentation/matlabDependencies';   %Tif, static
 %% initialization
 folders=dir([parentPath filesep '*Plate*']);
 if isempty(folders)
-    error('No usable folders found of in input folder.\n Folders must be names Plate1, Plate2, etc')
+    error(['No usable folders found in input folder' parentPath '.\n Folders must be names Plate1, Plate2, etc'])
 end
 
 
@@ -88,7 +94,9 @@ for iFolder = 1:numel(folders)
                         F = pcImageFeatures(imresize(nucleiImage,0.5,'nearest'),model.sigmas,model.offsets,model.osSigma,model.radii,...
                             model.cfSigma,model.logSigmas,model.sfSigmas,model.ridgeSigmas,model.ridgenangs,...
                             model.edgeSigmas,model.edgenangs,model.nhoodEntropy,model.nhoodStd);
-                        [imL,classProbs] = imClassify(F,model.treeBag,100);
+%                         [imL,classProbs] = imClassify(F,model.treeBag,100);
+                        [imL,classProbs] = imClassify(F,model.treeBag,nSubsets);
+
                         nucleiClass=classProbs(:,:,3);
                         
                         %% markers based on log filter on classProbs 3
@@ -177,7 +185,8 @@ for iFolder = 1:numel(folders)
                                         modelCat.osSigma,modelCat.radii,modelCat.cfSigma,modelCat.logSigmas,modelCat.sfSigmas,...
                                         modelCat.ridgeSigmas,modelCat.ridgenangs,modelCat.edgeSigmas,modelCat.edgenangs,modelCat.nhoodEntropy,...
                                         modelCat.nhoodStd);
-                                    [imL,catClassProbs] = imClassify(F,modelCat.treeBag,100);
+%                                     [imL,catClassProbs] = imClassify(F,modelCat.treeBag,100);
+                                    [imL,catClassProbs] = imClassify(F,modelCat.treeBag,nSubsets);
                                     contours = imresize(catClassProbs(:,:,2),2);
                                     %                             bgm = classProbs(:,:,1)>0.9;
                                     %                             bgm = imresize(bwmorph(bgm,'shrink',Inf),4);
@@ -314,6 +323,7 @@ for iFolder = 1:numel(folders)
                         figure,
                         axs=[];
                         axs = [axs subplot(1,2,1)];  imshow(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1))))))
+%                         axs = [axs subplot(1,2,1)];  imshow(real(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1)))))))
                         hold on
                         visboundaries(bwboundaries(nucleiMask),'LineWidth',1)
                         
@@ -322,6 +332,7 @@ for iFolder = 1:numel(folders)
                         end
                         
                         axs = [axs subplot(1,2,2)];imshow(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)))))))
+%                         axs = [axs subplot(1,2,2)];imshow(real(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2))))))))
                         hold on
                         visboundaries(bwboundaries(cytoplasmMask),'LineWidth',1)
                         
