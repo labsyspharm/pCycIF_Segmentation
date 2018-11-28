@@ -101,4 +101,3 @@ bleached = options['bleachImaged']
 for fn in sorted(glob.glob(outputPath+'/*.txt')):
     df = labelBiomarkers(fn,numCycles,markerList,bleached)
     df.to_csv(fn)
-

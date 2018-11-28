@@ -48,7 +48,6 @@ RUN chmod +x runSegmentation
 
 #Add rest of segmentation code 
 ADD matlabDependencies /segmentation/matlabDependencies
-ADD processSegmentation.py /segmentation/processSegmentation.py
 ADD segmentImages.py /segmentation/segmentImages.py
 ADD run_runSegmentation.sh /segmentation/run_runSegmentation.sh
 
