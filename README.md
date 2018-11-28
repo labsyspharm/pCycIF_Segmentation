@@ -4,8 +4,15 @@
 Add description
 
 ## Installation
+Make sure Docker is installed (https://www.docker.com/products/docker-desktop)
 Download the docker image using the command `docker pull rps21/pcycif_segmentation`
-Build the docker image by `docker build -t rps21/pcycif_segmentation .`
+
+To build from source, download the code using `https://github.com/sorgerlab/pCycIF_Segmentation.git`
+Within Matlab, navigate to the pCycIF_Segmentation/segmentationCode folder.
+Using Matlab's compilation functionality, run the command `mcc -m runSegmentation.m` to build the necessary binary
+The binary can be run using Matlab Runtime (https://www.mathworks.com/products/compiler/matlab-runtime.html)
+Alternatively, the code can be run by building a fresh docker container, using the Dockerfile contained in pCycIF_Segmentation/dockerBuild/Dockerfile which installs all necessary dependencies
+Then follow the usage instructions below for using the Docker container 
 
 ## Usage 
 Create an input folder which contains one folder for each plate that was imaged. Each of these folders must contain the images to be segmented
