@@ -2,8 +2,8 @@ parallel: 0
 NucMaskChan: [1 9]
 CytoMaskChan: [10 36]
 numCycles: 9
-row: 'CC'
-col: [4 5]
+row: 'CE'
+col: [4 7]
 saveFig: 1
 cytoMethod: 'RF'
 MedianIntensity: 1

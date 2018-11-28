@@ -72,5 +72,6 @@ Example: 1
 segmentCytoplasm: 'segmentCytoplasm'
 bleachImaged: Boolean value (0/1) stating if images were taked of bleaching in between each cycle 
 Example: 0
-
+markerList: List of strings indicating the names of biomarkers used, ordered by Channel and cycle number (Channel 1 - Cycle 1-end, Channel 2 - Cycle 1-end, etc. If no list is provided, channel and cycle names will be used instead
+Example: []
 
