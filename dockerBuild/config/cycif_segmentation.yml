@@ -3,15 +3,15 @@ NucMaskChan: [1 9]
 CytoMaskChan: [10 36]
 numCycles: 9
 row: 'CE'
-col: [4 7]
+col: [4 10]
 saveFig: 1
 cytoMethod: 'RF'
 MedianIntensity: 1
 saveMasks: 1
-applyFFC: 'ffonly' # 'none'
+applyFFC: 'ffonly' 
 useRFNuc: 1
 segmentCytoplasm: 'segmentCytoplasm'
 bleachImaged: 0
-markerList: ['MLC2v','pS6-240','p-Src','c-Jun','CleavedCaspase3','pan14-3-3','pRb','Oct4a','B-actin','B-tubulin','pAKT-S473','pS6-235','p-mTor','NFkB','mTor','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src','MLC2v','pS6-240','p-Src'] 
+markerList: [] 
 
 
