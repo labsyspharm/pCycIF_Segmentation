@@ -1,6 +1,6 @@
 parallel: 0
 NucMaskChan: [1 9]
-CytoMaskChan: [10 36]
+CytoMaskChan: [22 22]
 numCycles: 9
 row: 'CE'
 col: [4 10]
