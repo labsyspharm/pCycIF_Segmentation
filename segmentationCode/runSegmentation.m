@@ -1,9 +1,14 @@
 function [] = runSegmentation(parametersFile)
-% function CaitlinpCycifNucCytoSegmentationCPU(parentPath,modelPath,modelCatPath,FFCPath,varargin)
+% function adapted from CaitlinpCycifNucCytoSegmentationCPU(parentPath,modelPath,modelCatPath,FFCPath,varargin)
 %this function requires input of nuclei stack range. It assumes that every
-%stack beyond that to the end is a cytoplasmic stain. Marker controlled
-%watershed based on distance transform of nuclei channel is employed to
-%separate nuclei clumps.
+%plane after that is a functional nuclei/cytoplasmic stain. The nuclei are identified by marker controlled
+%watershed on the class probability map from a random forest model. For cytoplasm segmentation, if there is a marker 
+% that highlights boundaries between cells (such as b-catenin), these are highlighted by another random forest model. 
+% The nuclei are then used as markers for segmenting the cytoplasm.
+% If no such channel exists, then the distance transform around nuclei channel is used as an approximation for the cytosol.
+
+%Clarence Yapp 2018, modified by Robert Sheehan and Clarence Yapp for
+%Docker 11/2018
 
 javaaddpath('matlabDependencies/bfmatlab/bioformats_package.jar')
 javaaddpath('matlabDependencies/yaml/java/snakeyaml-1.9.jar')
@@ -28,11 +33,11 @@ useRFNuc = params.useRFNuc;
 segmentCytoplasm = params.segmentCytoplasm;
 
 %Paths that should not change
-parentPath = '/input';  %docker input folder, mapped by user
-analysisPath = '/output';   %docker output folder, mapped by user
-modelPath = '/segmentation/matlabDependencies';   %.mat, static
-modelCatPath = '/segmentation/matlabDependencies'; %.mat, static
-FFCPath = '/segmentation/matlabDependencies';   %Tif, static
+parentPath = 'input';  %docker input folder, mapped by user
+analysisPath = 'output';   %docker output folder, mapped by user
+modelPath = ['segmentationCode' filesep 'matlabDependencies'];   %.mat, static
+modelCatPath = ['segmentationCode' filesep 'matlabDependencies']; %.mat, static
+FFCPath = ['segmentationCode' filesep 'matlabDependencies'];   %Tif, static
 
 
 %% initialization
@@ -60,7 +65,7 @@ load([modelCatPath filesep 'modelCatManual.mat'])
 %%
 for iFolder = 1:numel(folders)
     testPath = [parentPath filesep folders(iFolder).name];
-    
+
     row = Row(1):Row(2);
     col = Col(1):Col(2);
     
@@ -322,7 +327,6 @@ for iFolder = 1:numel(folders)
                         % save mask overlay to .fig
                         figure,
                         axs=[];
-%                         axs = [axs subplot(1,2,1)];  imshow(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1))))))
                         axs = [axs subplot(1,2,1)];  imshow(real(sqrt(cytoResized(:,:,nucleiMaskChan(1))/max(max(cytoResized(:,:,nucleiMaskChan(1)))))))
                         hold on
                         visboundaries(bwboundaries(nucleiMask),'LineWidth',1)
@@ -331,7 +335,6 @@ for iFolder = 1:numel(folders)
                             text (nucleiStats(i).Centroid(1),nucleiStats(i).Centroid(2),int2str(i),'Color' ,'r')
                         end
                         
-%                         axs = [axs subplot(1,2,2)];imshow(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)))))))
                         axs = [axs subplot(1,2,2)];  imshow(real(sqrt(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2)),[],3)/max(max(max(cytoResized(:,:,CytoMaskChan(1):CytoMaskChan(2))))))))
                         hold on
                         visboundaries(bwboundaries(cytoplasmMask),'LineWidth',1)
