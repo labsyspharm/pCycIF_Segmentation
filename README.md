@@ -1,7 +1,8 @@
 # Dockerized app for segmentation of plate-based Cyclic Immunofluorescence (pCycIF) imaging data
 
 ## Segmentation Methodology
-Add description
+The ability to accurately segment nuclei and cytoplasm can be confounded in images of densely packed cells. Using standard thresholding algorithms (such as Otsu thresholding which classifies pixels purely based on intesity relative to a single global threshold), are unlikely able to split the majority of cells into individual objects. Here, we employ a machine learning approach using a random forest model that is trained to classify pixels in the nuclei stain channel into 3 classes : 1) background, 2) nuclei contours, and 3) the center of the nuclei. The features that are extracted from the nuclei channel consist of derivatives, Laplacian of Gaussian, lcoal standard deviation, local entropy, Hough transforms, and steerable filters of various sizes. Each feature on its own is a terrible predictor, but when combined with others, results in making a significantly improved prediction. From the probability class for the nuclei centers, one can obtain the regional maxima, which are generally the center of each nuclei. These are used as markers for a marker-controlled watershed to split clumped nuclei apart. 
+For segmenting the cytosol, we can employ 3 methods: 1) another random forest model trained on 2 classes (background and the junctions between cells), 2) the distance transform as an approximation of the cytosol, and 3) an annulus around each nuclei segmented using the aforementioned steps. Method 1 relies on whether there is an adequate marker that highlights the junctions between cells, such as B-catenin or E-cadherin. Where such as marker is absent, the distance transform (method 2) may yield satisfactory results. Method 3 samples a fixed area of the cytosol. 
 
 ## Installation
 Make sure Docker is installed (https://www.docker.com/products/docker-desktop)
