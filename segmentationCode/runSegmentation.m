@@ -35,9 +35,9 @@ segmentCytoplasm = params.segmentCytoplasm;
 %Paths that should not change
 parentPath = 'input';  %docker input folder, mapped by user
 analysisPath = 'output';   %docker output folder, mapped by user
-modelPath = ['segmentationCode' filesep 'matlabDependencies'];   %.mat, static
-modelCatPath = ['segmentationCode' filesep 'matlabDependencies']; %.mat, static
-FFCPath = ['segmentationCode' filesep 'matlabDependencies'];   %Tif, static
+modelPath = ['segmentation' filesep 'matlabDependencies'];   %.mat, static
+modelCatPath = ['segmentation' filesep 'matlabDependencies']; %.mat, static
+FFCPath = ['segmentation' filesep 'matlabDependencies'];   %Tif, static
 
 
 %% initialization
