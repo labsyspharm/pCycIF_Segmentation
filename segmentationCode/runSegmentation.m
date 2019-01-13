@@ -33,11 +33,11 @@ useRFNuc = params.useRFNuc;
 segmentCytoplasm = params.segmentCytoplasm;
 
 %Paths that should not change
-parentPath = 'input';  %docker input folder, mapped by user
-analysisPath = 'output';   %docker output folder, mapped by user
-modelPath = ['segmentation' filesep 'matlabDependencies'];   %.mat, static
-modelCatPath = ['segmentation' filesep 'matlabDependencies']; %.mat, static
-FFCPath = ['segmentation' filesep 'matlabDependencies'];   %Tif, static
+parentPath = '/input';  %docker input folder, mapped by user
+analysisPath = '/output';   %docker output folder, mapped by user
+modelPath = '/segmentation/matlabDependencies';   %.mat, static
+modelCatPath = '/segmentation/matlabDependencies'; %.mat, static
+FFCPath = '/segmentation/matlabDependencies';   %Tif, static
 
 
 %% initialization
